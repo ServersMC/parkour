@@ -37,6 +37,7 @@ public class CmdParkour extends BloxCommand {
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
+		
 		// Display Header
 		sender.sendMessage(RED + "Parkour" + GRAY + " - v" + Parkour.VERSION);
 
