@@ -1,0 +1,9 @@
+name: Parkour
+version: 1.0.0
+main: com.mcblox.parkour.core.Parkour
+author: DennisLysenko, ServersMS, McBlox
+website: http://mcblox.com/
+commands:
+    parkour:
+        description: 'Parkour main command'
+        usage: '/parkour'
