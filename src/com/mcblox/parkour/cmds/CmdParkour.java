@@ -14,6 +14,7 @@ import com.mcblox.parkour.cmds.parkour.CmdCreate;
 import com.mcblox.parkour.cmds.parkour.CmdDelete;
 import com.mcblox.parkour.cmds.parkour.CmdHelp;
 import com.mcblox.parkour.cmds.parkour.CmdHide;
+import com.mcblox.parkour.cmds.parkour.CmdList;
 import com.mcblox.parkour.cmds.parkour.CmdRegion;
 import com.mcblox.parkour.cmds.parkour.CmdSetFinish;
 import com.mcblox.parkour.cmds.parkour.CmdSetSpawn;
@@ -33,6 +34,7 @@ public class CmdParkour extends BloxCommand {
 		subCommands.add(new CmdShow());
 		subCommands.add(new CmdHide());
 		subCommands.add(new CmdSetSpawn());
+		subCommands.add(new CmdList());
 	}
 
 	@Override
