@@ -68,7 +68,7 @@ public class CmdSetSpawn extends BloxCommand {
 
 	@Override
 	public String getPermission() {
-		return "mcblox.parkour.setspawn";
+		return "parkour.setspawn";
 	}
 
 	@Override

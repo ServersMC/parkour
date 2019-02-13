@@ -60,7 +60,7 @@ public class CmdHide extends BloxCommand {
 
 	@Override
 	public String getPermission() {
-		return "mcblox.parkour.hide";
+		return "parkour.hide";
 	}
 
 	@Override

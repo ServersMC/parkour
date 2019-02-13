@@ -35,7 +35,7 @@ public class CmdHelp extends BloxCommand {
 
 	@Override
 	public String getPermission() {
-		return "mcblox.parkour.help";
+		return "parkour.help";
 	}
 
 	@Override

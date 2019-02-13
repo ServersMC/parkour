@@ -131,7 +131,7 @@ public class CmdSetFinish extends BloxCommand implements Listener {
 
 	@Override
 	public String getPermission() {
-		return "mcblox.parkour.setfinish";
+		return "parkour.setfinish";
 	}
 
 	@Override

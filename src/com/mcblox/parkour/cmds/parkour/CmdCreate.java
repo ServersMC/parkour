@@ -128,7 +128,7 @@ public class CmdCreate extends BloxCommand implements Listener {
 
 	@Override
 	public String getPermission() {
-		return "mcblox.parkour.create";
+		return "parkour.create";
 	}
 
 	@Override

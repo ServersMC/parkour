@@ -101,7 +101,7 @@ public class CmdDelete extends BloxCommand {
 
 	@Override
 	public String getPermission() {
-		return "mcblox.parkour.delete";
+		return "parkour.delete";
 	}
 
 	@Override

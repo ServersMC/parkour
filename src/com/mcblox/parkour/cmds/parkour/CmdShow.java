@@ -60,7 +60,7 @@ public class CmdShow extends BloxCommand {
 
 	@Override
 	public String getPermission() {
-		return "mcblox.parkour.show";
+		return "parkour.show";
 	}
 
 	@Override

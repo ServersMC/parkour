@@ -233,7 +233,7 @@ public class CmdRegion extends BloxCommand implements Listener {
 
 	@Override
 	public String getPermission() {
-		return "mcblox.parkour.region";
+		return "parkour.region";
 	}
 
 	@Override
