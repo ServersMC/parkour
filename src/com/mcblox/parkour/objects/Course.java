@@ -69,6 +69,16 @@ public class Course {
 				// Go into region blocks
 				ConfigurationSection blocks = regions.getConfigurationSection(region_id);
 				for (String block_id : blocks.getKeys(false)) {
+					
+					// Check if region is a block
+					try {
+						Integer.parseInt(block_id);
+					} catch (NumberFormatException e) {
+						if (block_id.equals("checkpoint")) {
+							region.setPoint((Location) blocks.get("checkpoint"));
+						}
+						continue;
+					}
 
 					// Load block data
 					Location loc = ((Location) blocks.get(block_id + ".loc"));
@@ -113,8 +123,7 @@ public class Course {
 	private Block finish;
 
 	private List<CourseRegion> regions = new ArrayList<CourseRegion>();
-	private HashMap<Player, Integer> playing = new HashMap<Player, Integer>();
-	private List<Player> inQueue = new ArrayList<Player>();
+	private HashMap<Player, Position> players = new HashMap<Player, Position>();
 
 	public Course(String name) {
 		id = courses.size();
@@ -123,6 +132,22 @@ public class Course {
 
 	public Course() {
 		id = courses.size();
+	}
+	
+	public boolean isReady() {
+		if (spawn == null) {
+			return false;
+		}
+		if (start == null) {
+			return false;
+		}
+		if (finish == null) {
+			return false;
+		}
+		if (regions.size() == 0) {
+			return false;
+		}
+		return true;
 	}
 
 	public int getId() {
@@ -136,7 +161,7 @@ public class Course {
 	public String getName() {
 		return name;
 	}
-
+	
 	public void setSpawn(Location loc) {
 		spawn = loc;
 	}
@@ -186,49 +211,58 @@ public class Course {
 	}
 
 	public void addQueue(Player player) {
-		inQueue.add(player);
+		players.put(player, new Position(-1, spawn));
 		updateVisibility();
 	}
 
 	public boolean isQueue(Player player) {
-		return inQueue.contains(player);
-	}
-
-	public boolean isPlaying(Player player) {
-		if (inQueue.contains(player)) {
-			return true;
-		}
-		if (playing.containsKey(player)) {
-			return true;
+		if (players.containsKey(player)) {
+			if (players.get(player).position == -1) {
+				return true;
+			}
 		}
 		return false;
 	}
 
+	public boolean isPlaying(Player player) {
+		return players.containsKey(player);
+	}
+
 	public void startPlayer(Player player) {
-		inQueue.remove(player);
-		playing.put(player, 0);
+		players.put(player, new Position(-1, spawn));
 		updateVisibility();
 	}
 
 	public void removePlayer(Player player) {
-		if (inQueue.contains(player)) {
-			inQueue.remove(player);
-		}
-		if (playing.containsKey(player)) {
-			playing.remove(player);
+		if (players.containsKey(player)) {
+			players.remove(player);
 		}
 		updateVisibility();
+	}
+	
+	public void resetPlayer(Player player) {
+		player.teleport(players.get(player).lastCheckpoint);
+		updatePlayerPos(player, players.get(player).checkPosition);
 	}
 
 	public Integer getPlayerPos(Player player) {
-		return playing.get(player);
+		return players.get(player).position;
 	}
 
 	public void updatePlayerPos(Player player, Integer position) {
-		playing.replace(player, position);
+		players.get(player).position = position;
 		updateVisibility();
 	}
-
+	
+	public void updatePlayerCheckpoint(Player player, Block block, CourseRegion region) {
+		Location pLoc = player.getLocation();
+		Location bLoc = block.getLocation();
+		pLoc.setX(bLoc.getBlockX() + 0.5d);
+		pLoc.setZ(bLoc.getBlockZ() + 0.5d);
+		players.get(player).lastCheckpoint = pLoc;
+		players.get(player).checkPosition = region.id;
+	}
+	
 	public void show() {
 		for (CourseRegion region : regions) {
 			region.show();
@@ -252,18 +286,17 @@ public class Course {
 			visiblePlan.put(region.id, false);
 		}
 
-		// Check if someone is in queue
-		if (inQueue.size() != 0) {
-			visiblePlan.replace(0, true);
-		}
-
 		// Add the region positions that are currently occupying players
-		playing.forEach((k, v) -> {
-			if (!positionsPlaying.contains(v)) {
-				positionsPlaying.add(v);
+		players.forEach((k, v) -> {
+			if (v.position == -1) {
+				visiblePlan.replace(0, true);
+			}
+			if (!positionsPlaying.contains(v.position) && v.position != -1) {
+				positionsPlaying.add(v.position);
 			}
 		});
 
+		
 		// Show regions that are in front of the regions occupied by the players
 		for (Integer pos : positionsPlaying) {
 			for (int i = 0; i < VIEW_DISTANCE; i++) {
@@ -291,6 +324,10 @@ public class Course {
 	public void saveCourse() {
 		File file = new File(FolderStructure.PARKOUR_COURSES.file(), name + ".dat");
 
+		if (!isReady()) {
+			return;
+		}
+		
 		try {
 
 			// Initialize writer buffer
@@ -305,6 +342,11 @@ public class Course {
 			// Save regions
 			for (CourseRegion region : regions) {
 
+				// Serialize checkpoint
+				if (region.getPoint() != null) {
+					yaml.set("regions." + region.id + ".checkpoint", region.getPoint());
+				}
+				
 				// Save region blocks
 				for (int i = 0; i < region.getBlocks().size(); i++) {
 

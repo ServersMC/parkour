@@ -21,7 +21,7 @@ public class CmdList extends BloxCommand {
 		
 		// List courses
 		for (Course course : courses) {
-			player.sendMessage(GRAY + "" + course.getId() + RED + ": " + GRAY + course.getName());
+			player.sendMessage(GRAY + "" + course.getId() + RED + " - " + GRAY + course.getName());
 		}
 		
 	}

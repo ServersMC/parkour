@@ -1,9 +1,11 @@
 name: Parkour
 version: 1.0.0
-main: com.mcblox.parkour.core.Parkour
+main: com.mcblox.parkour.Parkour
 author: DennisLysenko, ServersMS, McBlox
 website: http://mcblox.com/
+api-version: 1.13
 commands:
     parkour:
         description: 'Parkour main command'
         usage: '/parkour'
+        aliases: [pk]

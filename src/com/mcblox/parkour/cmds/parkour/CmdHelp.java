@@ -7,7 +7,7 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.mcblox.parkour.cmds.CmdParkour;
+import com.mcblox.parkour.enums.ParkourSubCommands;
 import com.mcblox.parkour.objects.BloxCommand;
 
 public class CmdHelp extends BloxCommand {
@@ -15,8 +15,8 @@ public class CmdHelp extends BloxCommand {
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		
-		for (BloxCommand cmd : CmdParkour.subCommands) {
-			sender.sendMessage(RED + cmd.getUsage() + GRAY + " - " + getDescription());
+		for (ParkourSubCommands psc : ParkourSubCommands.values()) {
+			sender.sendMessage(RED + psc.getCmd().getUsage() + GRAY + " - " + getDescription());
 		}
 		
 		//-- End: execute(CommandSender, String[])

@@ -11,14 +11,14 @@ import com.mcblox.parkour.objects.BloxCommand;
 import com.mcblox.parkour.objects.Course;
 import com.mcblox.parkour.utils.CourseSelect;
 
-public class CmdSetSpawn extends BloxCommand {
+public class CmdInfo extends BloxCommand {
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		
 		// Initialize variables
 		Player player = (Player) sender;
-		Course course = null;
+		Course course;
 		
 		// Check if course is selected
 		if (!CourseSelect.contains(player)) {
@@ -29,13 +29,16 @@ public class CmdSetSpawn extends BloxCommand {
 		// Declare course
 		course = CourseSelect.get(player);
 		
-		// Prompt message
-		player.sendMessage(GREEN + "Updated spawn point for " + GOLD + course.getName() + GREEN + "!");
+		// Show info
+		player.sendMessage(GRAY + "ID: " + GREEN + course.getId());
+		player.sendMessage(GRAY + "name: " + GREEN + course.getName());
+		player.sendMessage(GRAY + "hasSpawn: " + (course.getSpawn() == null ? RED + "no" : GREEN + "yes"));
+		player.sendMessage(GRAY + "hasStart: " + (course.getStartBlock() == null ? RED + "no" : GREEN + "yes"));
+		player.sendMessage(GRAY + "hasFinish: " + (course.getFinishBlock() == null ? RED + "no" : GREEN + "yes"));
+		player.sendMessage(GRAY + "regions: " + (course.getRegions().size() == 0 ? RED + "0" : GREEN + "" + course.getRegions().size()));
+		player.sendMessage(GRAY + "ready: " + (course.isReady() ? GREEN + "yes" : RED + "no"));
 		
-		// Set new spawn for course
-		course.setSpawn(player.getLocation());
-		
-		// -- End: execute(CommandSender sender, args)
+		// -- End: execute(CommandSender sender, String[])
 	}
 
 	@Override
@@ -45,22 +48,22 @@ public class CmdSetSpawn extends BloxCommand {
 
 	@Override
 	public String getLabel() {
-		return "SETSPAWN";
+		return "INFO";
 	}
 
 	@Override
 	public String getPermission() {
-		return "parkour.setspawn";
+		return "parkour.info";
 	}
 
 	@Override
 	public String getUsage() {
-		return "/parkour setspawn";
+		return "/parkour info";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Sets the spawn of a course.";
+		return "Get info of the selected course.";
 	}
 
 }

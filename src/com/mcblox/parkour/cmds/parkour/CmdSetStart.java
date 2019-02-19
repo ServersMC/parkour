@@ -18,7 +18,7 @@ import com.mcblox.parkour.objects.BloxCommand;
 import com.mcblox.parkour.objects.Course;
 import com.mcblox.parkour.utils.CourseSelect;
 
-public class CmdSetFinish extends BloxCommand implements Listener {
+public class CmdSetStart extends BloxCommand implements Listener {
 
 	private static List<Player> session = new ArrayList<Player>();
 	
@@ -27,7 +27,7 @@ public class CmdSetFinish extends BloxCommand implements Listener {
 		
 		// Initialize variables
 		Player player = (Player) sender;
-		
+
 		// Check if course is selected
 		if (!CourseSelect.contains(player)) {
 			CourseSelect.noSelectionMessage(player);
@@ -42,19 +42,14 @@ public class CmdSetFinish extends BloxCommand implements Listener {
 		}
 		
 		// Ask to select block
-		player.sendMessage(YELLOW + "[" + GOLD + "LEFT CLICK" + YELLOW + "] the finishing pressure plate...");
-		player.sendMessage(YELLOW + "Type \"/parkour setfinish\" to cancel session.");
+		player.sendMessage(YELLOW + "[" + GOLD + "LEFT CLICK" + YELLOW + "] the start pressure plate...");
+		player.sendMessage(YELLOW + "Type \"/parkour setstart\" to cancel session.");
 
 		
-		// Add player to session
+		// Add player to queue
 		session.add(player);
 		
 		//-- End: execute(CommandSender, String[])
-	}
-
-	@Override
-	public List<String> tabComplete(Player player, String[] args) {
-		return null;
 	}
 	
 	@EventHandler
@@ -74,8 +69,8 @@ public class CmdSetFinish extends BloxCommand implements Listener {
 		if (event.getHand().equals(EquipmentSlot.OFF_HAND)) {
 			return;
 		}
-
-		// Check if player is in session
+		
+		// Check if player is in queue
 		if (!session.contains(player)) {
 			return;
 		}
@@ -89,7 +84,7 @@ public class CmdSetFinish extends BloxCommand implements Listener {
 		// Declare course
 		course = CourseSelect.get(player);
 
-		// cancel event to prevent block breaking
+		// Cancel event to prevent block breaking
 		event.setCancelled(true);
 		
 		// Check if block is a pressure plate
@@ -99,16 +94,16 @@ public class CmdSetFinish extends BloxCommand implements Listener {
 		}
 		
 		// Check if block is start block
-		if (course.getStartBlock() != null) {
-			if (course.getStartBlock().equals(block)) {
+		if (course.getFinishBlock() != null) {
+			if (course.getFinishBlock().equals(block)) {
 				player.sendMessage(RED + "Finish plate can not be the same as the start block!");
 				return;
 			}
 		}
 		
 		// Prompt selected block
-		player.sendMessage(GREEN + "Created finishing point for course " + GOLD + course.getName() + GREEN + "!");
-		course.setFinishBlock(block);
+		player.sendMessage(GREEN + "Created starting point for course " + GOLD + course.getName() + GREEN + "!");
+		course.setStartBlock(block);
 		
 		// Cancel task and session
 		session.remove(player);
@@ -117,23 +112,28 @@ public class CmdSetFinish extends BloxCommand implements Listener {
 	}
 
 	@Override
+	public List<String> tabComplete(Player player, String[] args) {
+		return null;
+	}
+
+	@Override
 	public String getLabel() {
-		return "SETFINISH";
+		return "SETSTART";
 	}
 
 	@Override
 	public String getPermission() {
-		return "parkour.setfinish";
+		return "parkour.setstart";
 	}
 
 	@Override
 	public String getUsage() {
-		return "/parkour setfinish";
+		return "/parkour setstart";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Adds the finishing plate to the course!";
+		return "Sets the starting point for a course";
 	}
 
 }

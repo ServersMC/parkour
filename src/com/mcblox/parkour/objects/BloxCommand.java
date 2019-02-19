@@ -10,10 +10,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 
 import com.mcblox.parkour.Parkour;
 
-public abstract class BloxCommand implements CommandExecutor, TabCompleter {
+public abstract class BloxCommand implements CommandExecutor, TabCompleter, Listener {
 
 	// PUBLIC
 

@@ -6,11 +6,11 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class CourseBounds {
+public class Bounds {
 
 	private List<Location2D> locs = new ArrayList<Location2D>();
 	
-	public CourseBounds(List<CourseBlock> blocks) {
+	public Bounds(List<CourseBlock> blocks) {
 		update(blocks);
 	}
 	

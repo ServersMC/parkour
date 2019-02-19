@@ -19,6 +19,13 @@ public class CourseRegion {
 		delayedMaterial.add(SIGN);
 		delayedMaterial.add(WALL_SIGN);
 		delayedMaterial.add(LADDER);
+		delayedMaterial.add(TORCH);
+		delayedMaterial.add(WALL_TORCH);
+		for (Material mat : Material.values()) {
+			if (mat.name().endsWith("_PLATE")) {
+				delayedMaterial.add(mat);
+			}
+		}
 	}
 	
 	public int id;
@@ -26,12 +33,25 @@ public class CourseRegion {
 	private List<CourseBlock> blocks = new ArrayList<CourseBlock>();
 	private List<Block> rawBlocks = new ArrayList<Block>();
 	private Course course;
-	private CourseBounds bounds;
+	private Bounds bounds;
+	private Location point;
 	private boolean visible = true;
 
 	public CourseRegion(Course course) {
 		this.course = course;
-		bounds = new CourseBounds(blocks);
+		bounds = new Bounds(blocks);
+	}
+	
+	public void setPoint(Block block) {
+		point = block.getLocation();
+	}
+
+	public void setPoint(Location location) {
+		point = location;
+	}
+	
+	public Location getPoint() {
+		return point;
 	}
 	
 	public void addBlock(CourseBlock block) {

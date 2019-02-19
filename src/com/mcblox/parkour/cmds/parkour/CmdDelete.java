@@ -3,28 +3,38 @@ package com.mcblox.parkour.cmds.parkour;
 import static org.bukkit.ChatColor.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 
 import com.mcblox.parkour.objects.BloxCommand;
 import com.mcblox.parkour.objects.Course;
+import com.mcblox.parkour.utils.CourseSelect;
 
-public class CmdDelete extends BloxCommand {
+public class CmdDelete extends BloxCommand implements Listener {
 
-	private static HashMap<Player, Course> players = new HashMap<Player, Course>();
-
+	private static List<Player> session = new ArrayList<Player>();
+	
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 
 		// Initialize variables
 		Player player = (Player) sender;
 		Course course = null;
+		
+		// Check if course is selected
+		if (!CourseSelect.contains(player)) {
+			CourseSelect.noSelectionMessage(player);
+			return;
+		}
+		
+		// Declare course
+		course = CourseSelect.get(player);
 
 		// Check if player is in session
-		if (players.containsKey(player)) {
+		if (session.contains(player)) {
 
 			// Check args length is correct
 			if (args.length > 1) {
@@ -36,7 +46,7 @@ public class CmdDelete extends BloxCommand {
 					player.sendMessage(GREEN + "Deletion canceled!");
 
 					// Remove player from session
-					players.remove(player);
+					session.remove(player);
 					
 					return;
 				}
@@ -44,31 +54,17 @@ public class CmdDelete extends BloxCommand {
 			}
 
 			// Prompt Message
-			player.sendMessage(GREEN + "Deleted course \"" + GOLD + players.get(player).getName() + GREEN + "\"!");
+			player.sendMessage(GREEN + "Deleted course \"" + GOLD + course.getName() + GREEN + "\"!");
 
 			// Delete course
-			Course.deleteCourse(players.get(player));
+			Course.deleteCourse(course);
 			
 			// Remove from queue
-			players.remove(player);
+			session.remove(player);
+			
+			// remove player from selection
+			CourseSelect.remove(player);
 
-			return;
-		}
-
-		// Check if player provided ID
-		if (args.length == 1) {
-			player.sendMessage(RED + "Please enter course ID!");
-			return;
-		}
-
-		// Check if course id is valid
-		try {
-			course = Course.courses.get(Integer.parseInt(args[1]));
-		} catch (NumberFormatException e) {
-			sender.sendMessage(RED + "Please enter a number for course ID. ");
-			return;
-		} catch (IndexOutOfBoundsException e) {
-			player.sendMessage(RED + "Course ID not found!");
 			return;
 		}
 
@@ -77,7 +73,7 @@ public class CmdDelete extends BloxCommand {
 		player.sendMessage(RED + "Type " + GOLD + "/parkour delete" + RED + " to confirm, or " + GOLD + "/parkour delete cancel" + RED + " to cancel!");
 
 		// Add player to queue
-		players.put(player, course);
+		session.add(player);
 
 	}
 
@@ -85,11 +81,9 @@ public class CmdDelete extends BloxCommand {
 	public List<String> tabComplete(Player player, String[] args) {
 		List<String> list = new ArrayList<String>();
 		if (args.length == 2) {
-			if (players.containsKey(player)) {
+			if (session.contains(player)) {
 				list.add("cancel");
-				return list;
 			}
-			list.add(AQUA + "<id>");
 		}
 		return list;
 	}
@@ -106,7 +100,7 @@ public class CmdDelete extends BloxCommand {
 
 	@Override
 	public String getUsage() {
-		return "/parkour delete <id>";
+		return "/parkour delete";
 	}
 
 	@Override

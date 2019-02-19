@@ -9,16 +9,16 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
 import com.mcblox.parkour.objects.BloxCommand;
 import com.mcblox.parkour.objects.Course;
+import com.mcblox.parkour.objects.CourseRegion;
 import com.mcblox.parkour.utils.CourseSelect;
 
-public class CmdSetFinish extends BloxCommand implements Listener {
+public class CmdAddCheck extends BloxCommand {
 
 	private static List<Player> session = new ArrayList<Player>();
 	
@@ -34,31 +34,25 @@ public class CmdSetFinish extends BloxCommand implements Listener {
 			return;
 		}
 		
-		// Check if player cancelled session
+		// Check if in session
 		if (session.contains(player)) {
-			player.sendMessage(GREEN + "Session canceled.");
+			player.sendMessage(GREEN + "Session removed!");
 			session.remove(player);
 			return;
 		}
 		
-		// Ask to select block
-		player.sendMessage(YELLOW + "[" + GOLD + "LEFT CLICK" + YELLOW + "] the finishing pressure plate...");
-		player.sendMessage(YELLOW + "Type \"/parkour setfinish\" to cancel session.");
-
-		
 		// Add player to session
 		session.add(player);
 		
-		//-- End: execute(CommandSender, String[])
-	}
-
-	@Override
-	public List<String> tabComplete(Player player, String[] args) {
-		return null;
+		// Prompt message
+		player.sendMessage(GREEN + "Select a plate inside a region to add as checkpoint.");
+		player.sendMessage(GREEN + "Type again to cancel.");
+		
+		// -- End: execute(CommandSender, String[])
 	}
 	
 	@EventHandler
-	public void onInteractEvent(PlayerInteractEvent event) {
+	public void onPlayerInteract(PlayerInteractEvent event) {
 		
 		// Check if action is a click
 		if (event.getAction().equals(Action.PHYSICAL)) {
@@ -69,6 +63,7 @@ public class CmdSetFinish extends BloxCommand implements Listener {
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
 		Course course;
+		CourseRegion region = null;
 
 		// Fix double right-click
 		if (event.getHand().equals(EquipmentSlot.OFF_HAND)) {
@@ -97,18 +92,29 @@ public class CmdSetFinish extends BloxCommand implements Listener {
 			player.sendMessage(RED + "Please select a pressure plate!");
 			return;
 		}
-		
-		// Check if block is start block
-		if (course.getStartBlock() != null) {
-			if (course.getStartBlock().equals(block)) {
-				player.sendMessage(RED + "Finish plate can not be the same as the start block!");
-				return;
+
+		// Get region selected
+		for (CourseRegion find : course.getRegions()) {
+			if (find.hasBlock(block)) {
+				region = find;
 			}
+		}
+
+		// Check if block is in a region
+		if (region == null) {
+			player.sendMessage(RED + "This plate is not in a region!");
+			return;
+		}
+		
+		// Check if block is a checkpoint
+		if (region.getPoint() != null) {
+			player.sendMessage(RED + "This region already has a checkpoint!");
+			return;
 		}
 		
 		// Prompt selected block
-		player.sendMessage(GREEN + "Created finishing point for course " + GOLD + course.getName() + GREEN + "!");
-		course.setFinishBlock(block);
+		player.sendMessage(GREEN + "Added checkpoint for course " + GOLD + course.getName() + GREEN + "!");
+		region.setPoint(block);
 		
 		// Cancel task and session
 		session.remove(player);
@@ -117,23 +123,28 @@ public class CmdSetFinish extends BloxCommand implements Listener {
 	}
 
 	@Override
+	public List<String> tabComplete(Player player, String[] args) {
+		return null;
+	}
+
+	@Override
 	public String getLabel() {
-		return "SETFINISH";
+		return "ADDCHECK";
 	}
 
 	@Override
 	public String getPermission() {
-		return "parkour.setfinish";
+		return "parkour.addcheck";
 	}
 
 	@Override
 	public String getUsage() {
-		return "/parkour setfinish";
+		return "/parkour addcheck";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Adds the finishing plate to the course!";
+		return "Add Checkpoint to course";
 	}
 
 }

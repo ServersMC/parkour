@@ -10,32 +10,10 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import com.mcblox.parkour.Parkour;
-import com.mcblox.parkour.cmds.parkour.CmdCreate;
-import com.mcblox.parkour.cmds.parkour.CmdDelete;
-import com.mcblox.parkour.cmds.parkour.CmdHelp;
-import com.mcblox.parkour.cmds.parkour.CmdHide;
-import com.mcblox.parkour.cmds.parkour.CmdList;
-import com.mcblox.parkour.cmds.parkour.CmdRegion;
-import com.mcblox.parkour.cmds.parkour.CmdSetFinish;
-import com.mcblox.parkour.cmds.parkour.CmdSetSpawn;
-import com.mcblox.parkour.cmds.parkour.CmdShow;
+import com.mcblox.parkour.enums.ParkourSubCommands;
 import com.mcblox.parkour.objects.BloxCommand;
 
 public class CmdParkour extends BloxCommand {
-
-	public static List<BloxCommand> subCommands = new ArrayList<BloxCommand>();
-
-	public static void setupSubCommands() {
-		subCommands.add(new CmdHelp());
-		subCommands.add(new CmdCreate());
-		subCommands.add(new CmdRegion());
-		subCommands.add(new CmdSetFinish());
-		subCommands.add(new CmdDelete());
-		subCommands.add(new CmdShow());
-		subCommands.add(new CmdHide());
-		subCommands.add(new CmdSetSpawn());
-		subCommands.add(new CmdList());
-	}
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
@@ -54,25 +32,22 @@ public class CmdParkour extends BloxCommand {
 
 		// Show help if no arguments are given
 		if (args.length == 0) {
-			player.sendMessage(RED + "Try " + getUsage());
+			ParkourSubCommands.HELP.execute(sender, args);
 			return;
 		}
 
 		// Execute sub-command
-		boolean found = false;
-		for (BloxCommand cmd : subCommands) {
-			if (args[0].equalsIgnoreCase(cmd.getLabel())) {
-				found = true;
+		for (ParkourSubCommands psc : ParkourSubCommands.values()) {
+			BloxCommand cmd = psc.getCmd();
+			if (cmd.getLabel().equalsIgnoreCase(args[0])) {
 				cmd.execute(sender, args);
 				return;
 			}
 		}
-
-		// If sub-command not found
-		if (!found) {
-			player.sendMessage(RED + "Sub Command not found, try " + getUsage());
-		}
-
+		
+		// Prompt if sub-command not found
+		player.sendMessage(RED + "Sub Command not found, try " + getUsage());
+		
 		// -- End: execute(CommandSender, String[])
 	}
 
@@ -87,7 +62,8 @@ public class CmdParkour extends BloxCommand {
 			}
 		}
 		if (args.length > 1) {
-			for (BloxCommand cmd : subCommands) {
+			for (ParkourSubCommands psc : ParkourSubCommands.values()) {
+				BloxCommand cmd = psc.getCmd();
 				if (cmd.getLabel().equalsIgnoreCase(args[0])) {
 					return cmd.tabComplete(player, args);
 				}
@@ -117,9 +93,9 @@ public class CmdParkour extends BloxCommand {
 
 	@Override
 	public String[] getTabList() {
-		String[] list = new String[subCommands.size()];
+		String[] list = new String[ParkourSubCommands.values().length];
 		for (int i = 0; i < list.length; i++) {
-			list[i] = subCommands.get(i).getLabel();
+			list[i] = ParkourSubCommands.values()[i].getCmd().getLabel();
 		}
 		return list;
 	}

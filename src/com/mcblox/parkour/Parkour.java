@@ -1,16 +1,17 @@
 package com.mcblox.parkour;
 
+import static com.mcblox.parkour.enums.ParkourSubCommands.*;
+
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.mcblox.parkour.cmds.CmdParkour;
-import com.mcblox.parkour.cmds.parkour.CmdCreate;
-import com.mcblox.parkour.cmds.parkour.CmdRegion;
-import com.mcblox.parkour.cmds.parkour.CmdSetFinish;
 import com.mcblox.parkour.enums.FolderStructure;
 import com.mcblox.parkour.events.ParkourPlay;
 import com.mcblox.parkour.objects.Course;
 import com.mcblox.parkour.utils.Console;
+import com.mcblox.parkour.utils.TitleAPI;
 
 public class Parkour extends JavaPlugin {
 
@@ -30,14 +31,18 @@ public class Parkour extends JavaPlugin {
 		}
 
 		// Register commands
-		CmdParkour.setupSubCommands();
-		PLUGIN.getCommand("parkour").setExecutor(new CmdParkour());
-		PLUGIN.getCommand("parkour").setTabCompleter(new CmdParkour());
+		CmdParkour cmdParkour = new CmdParkour();
+		PLUGIN.getCommand("parkour").setExecutor(cmdParkour);
+		PLUGIN.getCommand("parkour").setTabCompleter(cmdParkour);
 
-		// Register events
-		Bukkit.getPluginManager().registerEvents(new CmdCreate(), PLUGIN);
-		Bukkit.getPluginManager().registerEvents(new CmdRegion(), PLUGIN);
-		Bukkit.getPluginManager().registerEvents(new CmdSetFinish(), PLUGIN);
+		// Register command events
+		Bukkit.getPluginManager().registerEvents(SET_START.getCmd(), PLUGIN);
+		Bukkit.getPluginManager().registerEvents(REGION.getCmd(), PLUGIN);
+		Bukkit.getPluginManager().registerEvents(SET_FINISH.getCmd(), PLUGIN);
+		Bukkit.getPluginManager().registerEvents(DELETE.getCmd(), PLUGIN);
+		Bukkit.getPluginManager().registerEvents(ADD_CHECK.getCmd(), PLUGIN);
+		
+		// Register stand-alone events
 		Bukkit.getPluginManager().registerEvents(new ParkourPlay(), PLUGIN);
 
 		// Load Courses
@@ -50,6 +55,11 @@ public class Parkour extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		
+		// Clear Titles
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			TitleAPI.sendTitle(player, 0, 0, 0, "", "");
+		}
 		
 		// Save courses
 		for (Course course : Course.courses) {

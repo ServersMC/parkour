@@ -21,12 +21,12 @@ import org.bukkit.inventory.EquipmentSlot;
 import com.mcblox.parkour.objects.BloxCommand;
 import com.mcblox.parkour.objects.Course;
 import com.mcblox.parkour.objects.CourseRegion;
+import com.mcblox.parkour.utils.CourseSelect;
 
 public class CmdRegion extends BloxCommand implements Listener {
 
-	private static HashMap<Player, CourseRegion> regionQueue = new HashMap<Player, CourseRegion>();
-	private CourseRegion region;
-
+	private static HashMap<Player, CourseRegion> session = new HashMap<Player, CourseRegion>();
+	
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 
@@ -34,8 +34,16 @@ public class CmdRegion extends BloxCommand implements Listener {
 		Player player = (Player) sender;
 		Course course = null;
 
+		// Check if course is selected
+		if (!CourseSelect.contains(player)) {
+			CourseSelect.noSelectionMessage(player);
+		}
+		
+		// Declare course
+		course = CourseSelect.get(player);
+		
 		// Check if player is in session
-		if (regionQueue.containsKey(player)) {
+		if (session.containsKey(player)) {
 
 			// Check if args length is correct
 			if (args.length > 1) {
@@ -46,8 +54,8 @@ public class CmdRegion extends BloxCommand implements Listener {
 					// Prompt Message
 					player.sendMessage(GREEN + "Canceled region selection");
 					
-					// Remove player from queue
-					regionQueue.remove(player);
+					// Remove player from session
+					session.remove(player);
 					
 					return;
 				}
@@ -60,35 +68,11 @@ public class CmdRegion extends BloxCommand implements Listener {
 
 		}
 
-		// Check args length
+		// Check if args are given
 		if (args.length == 1) {
 			sender.sendMessage(RED + "Incorrect usage. " + getUsage());
 			return;
 		}
-
-		// Check if id of course was given
-		if (args.length == 2) {
-			if (args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("reset")) {
-				sender.sendMessage(RED + "Please give course ID.");
-			} else {
-				sender.sendMessage(RED + "Incorrect usage. " + getUsage());
-			}
-			return;
-		}
-
-		// Check if course id is valid
-		try {
-			course = Course.courses.get(Integer.parseInt(args[2]));
-		} catch (NumberFormatException e) {
-			sender.sendMessage(RED + "Please enter a number for course ID. ");
-			return;
-		} catch (IndexOutOfBoundsException e) {
-			player.sendMessage(RED + "Course ID not found!");
-			return;
-		}
-
-		// Declare Course
-		region = new CourseRegion(course);
 
 		// Check if reset function is called
 		if (args[1].equalsIgnoreCase("reset")) {
@@ -103,8 +87,8 @@ public class CmdRegion extends BloxCommand implements Listener {
 		player.sendMessage(YELLOW + "[" + GOLD + "RIGHT CLICK" + YELLOW + "] to finish");
 		player.sendMessage(YELLOW + "To cancel region type /parkour region cancel, or create an empty region");
 
-		// Add player to queue
-		regionQueue.put(player, region);
+		// Add player to session
+		session.put(player, new CourseRegion(CourseSelect.get(player)));
 
 		// -- End: execute(CommandSender, String[])
 	}
@@ -113,7 +97,7 @@ public class CmdRegion extends BloxCommand implements Listener {
 	public List<String> tabComplete(Player player, String[] args) {
 		List<String> list = new ArrayList<String>();
 		String[] labels;
-		if (regionQueue.containsKey(player)) {
+		if (session.containsKey(player)) {
 			labels = new String[]{"cancel"};
 		}
 		else {
@@ -125,11 +109,6 @@ public class CmdRegion extends BloxCommand implements Listener {
 					list.add(label);
 				}
 			}
-			return list;
-		}
-		if (args.length == 3 && !args[1].equalsIgnoreCase("cancel")) {
-			list.add(AQUA + "<id>");
-			return list;
 		}
 		return list;
 	}
@@ -146,6 +125,12 @@ public class CmdRegion extends BloxCommand implements Listener {
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
 		CourseRegion region;
+		
+		// Check if course is selected
+		if (!CourseSelect.contains(player)) {
+			session.remove(player);
+			return;
+		}
 
 		// Fix double right-click
 		if (event.getHand().equals(EquipmentSlot.OFF_HAND)) {
@@ -153,7 +138,7 @@ public class CmdRegion extends BloxCommand implements Listener {
 		}
 
 		// Check if player is in queue
-		if (!regionQueue.containsKey(player)) {
+		if (!session.containsKey(player)) {
 			return;
 		}
 
@@ -161,7 +146,7 @@ public class CmdRegion extends BloxCommand implements Listener {
 		event.setCancelled(true);
 
 		// Declare CourseRegion
-		region = regionQueue.get(player);
+		region = session.get(player);
 
 		// Check if left click
 		if (event.getAction().name().contains("LEFT")) {
@@ -203,7 +188,7 @@ public class CmdRegion extends BloxCommand implements Listener {
 				player.sendMessage(YELLOW + "No region has been added. No blocks selected.");
 
 				// Remove player from session
-				regionQueue.remove(player);
+				session.remove(player);
 
 				return;
 			}
@@ -218,7 +203,7 @@ public class CmdRegion extends BloxCommand implements Listener {
 			region.getCourse().addRegion(region);
 
 			// Reset session
-			regionQueue.replace(player, new CourseRegion(region.getCourse()));
+			session.replace(player, new CourseRegion(region.getCourse()));
 
 			// -- End: if #Right Click
 		}
@@ -238,7 +223,7 @@ public class CmdRegion extends BloxCommand implements Listener {
 
 	@Override
 	public String getUsage() {
-		return "/parkour region <add | reset> <courseId>";
+		return "/parkour region <add | reset>";
 	}
 
 	@Override
