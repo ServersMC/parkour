@@ -22,6 +22,9 @@ class Main : JavaPlugin() {
         // Register Events
         Bukkit.getPluginManager().apply {
 	        registerEvents(ParkourPlay, Parkour)
+	        registerEvents(PlayerJoin, Parkour)
+	        registerEvents(PlayerQuit, Parkour)
+	        
 	        registerEvents(CmdSetStart, Parkour)
 	        registerEvents(CmdRegion, Parkour)
 	        registerEvents(CmdSetFinish, Parkour)
