@@ -9,8 +9,8 @@ class CRegion {
 	private val blocks = ArrayList<CBlock>()
 	
 	private var index = 0
-	private var vectorMin: Vector = Vector()
-	private var vectorMax: Vector = Vector()
+	private var min: Vector = Vector()
+	private var max: Vector = Vector()
 	
 	fun load(section: ConfigurationSection) {
 		// Initialize attributes
@@ -44,7 +44,7 @@ class CRegion {
 	}
 	
 	fun boundsContain(vector: Vector): Boolean {
-		return vector.isInAABB(vectorMin, vectorMax)
+		return vector.isInAABB(min, max)
 	}
 	
 	fun show() {
@@ -62,12 +62,19 @@ class CRegion {
 	}
 	
 	private fun calculateBounds() {
+		// Check if list is empty
+		if (blocks.isEmpty()) return
+		// Run calculation
 		ArrayList<Vector>().apply {
+			// Convert locations to vector and add to list
 			blocks.forEach { add(it.getLocation().toVector()) }
-		}.forEach {
-		
+			// Zero out vectors
+			min.zero()
+			max.zero()
+			// Apply minimum
+			min.add(Vector(minBy { it.x }!!.x, minBy { it.y }!!.y, minBy { it.z }!!.z))
+			max.add(Vector(maxBy { it.x }!!.x, maxBy { it.y }!!.y, maxBy { it.z }!!.z))
 		}
-		// TODO - Create a more efficient algorithm
 	}
 	
 }
