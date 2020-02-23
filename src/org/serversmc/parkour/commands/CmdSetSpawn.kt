@@ -1,8 +1,8 @@
 package org.serversmc.parkour.commands
 
-import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
-import org.serversmc.interfaces.ICommand
+import org.bukkit.command.*
+import org.bukkit.entity.*
+import org.serversmc.interfaces.*
 
 object CmdSetSpawn : ICommand {
 	

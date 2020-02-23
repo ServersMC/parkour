@@ -1,9 +1,7 @@
 package org.serversmc.parkour.events
 
-import org.bukkit.event.Listener
+import org.bukkit.event.*
 
 object ParkourPlay : Listener {
-
-
 
 }

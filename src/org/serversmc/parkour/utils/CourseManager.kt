@@ -1,5 +1,42 @@
 package org.serversmc.parkour.utils
 
-object CourseManager {
+import org.serversmc.parkour.core.*
+import org.serversmc.parkour.objects.*
+import java.io.*
 
+object CourseManager {
+	
+	private val dataFolder = File(Main.Parkour.dataFolder, "courses")
+	private val courses = ArrayList<Course>()
+	
+	fun createCourse(name: String): Course {
+		// Create file
+		val fileName = name.toLowerCase().replace(" ", "_")
+		val file = File(dataFolder, "$fileName.dat")
+		// Create course
+		val course = Course(file).apply {
+			setName(name)
+		}
+		// Add course to list
+		courses.add(course)
+		// Return created course
+		return course
+	}
+	
+	fun deleteCourse(course: Course) {
+		course.delete()
+		courses.remove(course)
+	}
+	
+	fun loadCourses() {
+		dataFolder.listFiles()?.forEach {
+			// Check if file is null
+			if (it == null) return@forEach
+			// Check if file extension is .dat
+			if (it.name.endsWith(".day", true)) return@forEach
+			// Load Yaml
+			courses.add(Course(it))
+		}
+	}
+	
 }
