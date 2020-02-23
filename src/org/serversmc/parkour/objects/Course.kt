@@ -92,7 +92,6 @@ class Course(private val file: File) {
 	
 	fun createRegion(): CRegion {
 		return CRegion().apply {
-			// TODO - Test if this works (regions.add(this))
 			regions.add(this)
 			setIndex(regions.size)
 		}
