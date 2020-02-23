@@ -11,6 +11,8 @@ class Course(private val file: File) {
 		OPEN, CLOSED
 	}
 	
+	private val viewDistance = 3
+	
 	private val players = HashMap<Player, PlayerData>()
 	private val regions = ArrayList<CRegion>()
 	private val sensors = ArrayList<CSensor>()
@@ -89,11 +91,14 @@ class Course(private val file: File) {
 	
 	fun hasPlayer(player: Player) = players.containsKey(player)
 	
-	fun getPlayerPos(player: Player) = players[player]?.getPosition()
+	fun getPlayerPos(player: Player) = players[player]!!.getPosition()
 	
-	fun getPlayerCheckpoint(player: Player) = players[player]?.getCheckpoint()
+	fun setPlayerPos(player: Player, id: Int) {
+		players[player]!!.setPosition(id)
+		// TODO - Update visibility
+	}
 	
-	fun getPlayerData(player: Player) = players[player]
+	fun getPlayerCheckpoint(player: Player) = players[player]!!.getCheckpoint()
 	
 	/*************/
 	/** REGIONS **/
@@ -101,10 +106,11 @@ class Course(private val file: File) {
 	
 	fun getRegions() = regions
 	
+	fun getRegion(index: Int) = regions[index]
+	
 	fun createRegion(): CRegion {
 		return CRegion().apply {
 			regions.add(this)
-			setIndex(regions.size)
 		}
 	}
 	
@@ -118,7 +124,7 @@ class Course(private val file: File) {
 	
 	fun getSensors() = sensors
 	
-	fun getStartSensor(): CSensor? = sensors.singleOrNull { it.getType() == CSensor.Type.START }
+	fun getStartSensor() = sensors.single { it.getType() == CSensor.Type.START }
 	
 	fun setStartSensor(location: Location) {
 		sensors.singleOrNull { it.getType() == CSensor.Type.START }?.apply {
@@ -127,13 +133,13 @@ class Course(private val file: File) {
 		sensors.add(CSensor.create(CSensor.Type.START, location))
 	}
 	
-	fun getCheckpoints(): List<CSensor> = sensors.filter { it.getType() == CSensor.Type.CHECKPOINT }
+	fun getCheckpoints() = sensors.filter { it.getType() == CSensor.Type.CHECKPOINT }
 	
 	fun addCheckpoint(location: Location) {
 		sensors.add(CSensor.create(CSensor.Type.CHECKPOINT, location))
 	}
 	
-	fun getFinishSensor(): CSensor? = sensors.singleOrNull { it.getType() == CSensor.Type.FINISH }
+	fun getFinishSensor() = sensors.single { it.getType() == CSensor.Type.FINISH }
 	
 	fun setFinishSensor(location: Location) {
 		sensors.singleOrNull { it.getType() == CSensor.Type.FINISH }?.apply {
@@ -145,6 +151,8 @@ class Course(private val file: File) {
 	/***********************/
 	/** GETTERS / SETTERS **/
 	/***********************/
+	
+	fun getViewDistance() = viewDistance
 	
 	fun getSpawn() = spawn
 	
@@ -192,10 +200,10 @@ class Course(private val file: File) {
 		}
 		
 		// Save Regions
-		regions.forEach { region ->
+		regions.forEachIndexed { regionId, region ->
 			region.getBlocks().forEachIndexed { blockId, b ->
-				yaml.set("regions.${region.getIndex()}.$blockId.loc", b.getLocation())
-				yaml.set("regions.${region.getIndex()}.$blockId.data", b.getBlockData().getAsString(true))
+				yaml.set("regions.$regionId.$blockId.loc", b.getLocation())
+				yaml.set("regions.$regionId.$blockId.data", b.getBlockData().getAsString(true))
 			}
 		}
 		

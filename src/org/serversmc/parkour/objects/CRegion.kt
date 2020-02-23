@@ -8,17 +8,18 @@ class CRegion {
 	
 	private val blocks = ArrayList<CBlock>()
 	
-	private var index = 0
-	private var min: Vector = Vector()
-	private var max: Vector = Vector()
+	private var id = 0
+	private var visible = true
+	private var min = Vector()
+	private var max = Vector()
 	
 	fun load(section: ConfigurationSection) {
 		
-		// Initialize attributes
-		index = section.parent!!.name.toInt()
-		
 		// Load blocks
 		section.getKeys(false).forEach {
+			
+			// Set region id
+			id = section.parent!!.name.toInt()
 			
 			// Check if section is valid
 			if (it == null) return@forEach
@@ -32,11 +33,9 @@ class CRegion {
 		calculateBounds()
 	}
 	
-	fun getIndex() = index
+	fun getId() = id
 	
-	fun setIndex(index: Int) {
-		this.index = index
-	}
+	fun isVisible() = visible
 	
 	fun getBlocks(): ArrayList<CBlock> = blocks
 	
@@ -51,19 +50,7 @@ class CRegion {
 		return vector.isInAABB(min, max)
 	}
 	
-	fun show() {
-		// Show blocks that are solid
-		blocks.filter { it.getBlockData().material.isSolid }.forEach { it.show() }
-		// Show blocks that are not solid
-		blocks.filterNot { it.getBlockData().material.isSolid }.forEach { it.show() }
-	}
-	
-	fun hide() {
-		// Show blocks that are not solid
-		blocks.filterNot { it.getBlockData().material.isSolid }.forEach { it.hide() }
-		// Show blocks that are solid
-		blocks.filter { it.getBlockData().material.isSolid }.forEach { it.hide() }
-	}
+	fun getMinY() = min.y
 	
 	private fun calculateBounds() {
 		// Check if list is empty
@@ -75,10 +62,34 @@ class CRegion {
 			// Zero out vectors
 			min.zero()
 			max.zero()
-			// Apply minimum
-			min.add(Vector(minBy { it.x }!!.x, minBy { it.y }!!.y, minBy { it.z }!!.z))
-			max.add(Vector(maxBy { it.x }!!.x, maxBy { it.y }!!.y, maxBy { it.z }!!.z))
+			// Calculate min
+			val minX = minBy { it.x }!!.x - 0.5
+			val minY = minBy { it.y }!!.y + 0.5
+			val minZ = minBy { it.z }!!.z - 0.5
+			// Calculate max
+			val maxX = maxBy { it.x }!!.x + 1.5
+			val maxY = maxBy { it.y }!!.y + 1.0
+			val maxZ = maxBy { it.z }!!.z + 1.5
+			// Apply bounds
+			min.add(Vector(minX, minY, minZ))
+			max.add(Vector(maxX, maxY, maxZ))
 		}
+	}
+	
+	fun show() {
+		visible = true
+		// Show blocks that are solid
+		blocks.filter { it.getBlockData().material.isSolid }.forEach { it.show() }
+		// Show blocks that are not solid
+		blocks.filterNot { it.getBlockData().material.isSolid }.forEach { it.show() }
+	}
+	
+	fun hide() {
+		visible = false
+		// Show blocks that are not solid
+		blocks.filterNot { it.getBlockData().material.isSolid }.forEach { it.hide() }
+		// Show blocks that are solid
+		blocks.filter { it.getBlockData().material.isSolid }.forEach { it.hide() }
 	}
 	
 }
