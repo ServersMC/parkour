@@ -46,7 +46,7 @@ class Course(private val file: File) {
 				val section = yamlSensors.getConfigurationSection(it) ?: return@forEach
 				
 				// Load sensor
-				sensors.add(CSensor().apply { load(section, this@Course) })
+				sensors.add(CSensor().apply { load(section) })
 			}
 			
 			// Try to load regions
@@ -124,13 +124,13 @@ class Course(private val file: File) {
 		sensors.singleOrNull { it.getType() == CSensor.Type.START }?.apply {
 			sensors.remove(this)
 		}
-		sensors.add(CSensor.create(CSensor.Type.START, location, this))
+		sensors.add(CSensor.create(CSensor.Type.START, location))
 	}
 	
 	fun getCheckpoints(): List<CSensor> = sensors.filter { it.getType() == CSensor.Type.CHECKPOINT }
 	
 	fun addCheckpoint(location: Location) {
-		sensors.add(CSensor.create(CSensor.Type.CHECKPOINT, location, this))
+		sensors.add(CSensor.create(CSensor.Type.CHECKPOINT, location))
 	}
 	
 	fun getFinishSensor(): CSensor? = sensors.singleOrNull { it.getType() == CSensor.Type.FINISH }
@@ -139,7 +139,7 @@ class Course(private val file: File) {
 		sensors.singleOrNull { it.getType() == CSensor.Type.FINISH }?.apply {
 			sensors.remove(this)
 		}
-		sensors.add(CSensor.create(CSensor.Type.FINISH, location, this))
+		sensors.add(CSensor.create(CSensor.Type.FINISH, location))
 	}
 	
 	/***********************/
