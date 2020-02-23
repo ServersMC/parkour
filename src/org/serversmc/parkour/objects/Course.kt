@@ -8,7 +8,7 @@ import java.io.*
 class Course(private val file: File) {
 	
 	enum class Mode {
-		OPEN, CLOSED, DISABLED
+		OPEN, CLOSED
 	}
 	
 	private val players = HashMap<Player, PlayerData>()
@@ -18,34 +18,45 @@ class Course(private val file: File) {
 	private var plays = 0
 	private var wins = 0
 	
+	private lateinit var author: String
+	private var spawn: Location? = null
 	private var name = file.nameWithoutExtension
 	private var mode = Mode.CLOSED
-	private var author = "ServersMC"
 	
 	init {
+		
 		// Check if file exists
 		if (file.exists()) {
+			
 			// Load yaml file
 			val yaml = YamlConfiguration.loadConfiguration(file)
+			
 			// Initialize attributes
 			name = yaml.getString("name")!!
+			spawn = if (yaml.getString("spawn") == "null") null else yaml.get("spawn") as Location
 			mode = Mode.valueOf(yaml.getString("mode")!!)
 			author = yaml.getString("author")!!
+			
 			// Try to load sensors
 			val yamlSensors = yaml.getConfigurationSection("sections")
 			yamlSensors?.getKeys(false)?.forEach {
+				
 				// Check if section is valid
 				if (it == null) return@forEach
 				val section = yamlSensors.getConfigurationSection(it) ?: return@forEach
+				
 				// Load sensor
-				sensors.add(CSensor().apply { load(section) })
+				sensors.add(CSensor().apply { load(section, this@Course) })
 			}
+			
 			// Try to load regions
 			val yamlRegions = yaml.getConfigurationSection("regions")
 			yamlRegions?.getKeys(false)?.forEach {
+				
 				// Check if section is valid
 				if (it == null) return@forEach
 				val section = yamlRegions.getConfigurationSection(it) ?: return@forEach
+				
 				// Load region
 				regions.add(CRegion().apply { load(section) })
 			}
@@ -78,11 +89,11 @@ class Course(private val file: File) {
 	
 	fun hasPlayer(player: Player) = players.containsKey(player)
 	
-	fun getPlayerPos(player: Player) = players[player]!!.getPosition()
+	fun getPlayerPos(player: Player) = players[player]?.getPosition()
 	
 	fun getPlayerCheckpoint(player: Player) = players[player]?.getCheckpoint()
 	
-	fun getPlayerData(player: Player) = players[player]!!
+	fun getPlayerData(player: Player) = players[player]
 	
 	/*************/
 	/** REGIONS **/
@@ -105,19 +116,21 @@ class Course(private val file: File) {
 	/** SENSORS **/
 	/*************/
 	
+	fun getSensors() = sensors
+	
 	fun getStartSensor(): CSensor? = sensors.singleOrNull { it.getType() == CSensor.Type.START }
 	
 	fun setStartSensor(location: Location) {
 		sensors.singleOrNull { it.getType() == CSensor.Type.START }?.apply {
 			sensors.remove(this)
 		}
-		sensors.add(CSensor.create(CSensor.Type.START, location))
+		sensors.add(CSensor.create(CSensor.Type.START, location, this))
 	}
 	
 	fun getCheckpoints(): List<CSensor> = sensors.filter { it.getType() == CSensor.Type.CHECKPOINT }
 	
 	fun addCheckpoint(location: Location) {
-		sensors.add(CSensor.create(CSensor.Type.CHECKPOINT, location))
+		sensors.add(CSensor.create(CSensor.Type.CHECKPOINT, location, this))
 	}
 	
 	fun getFinishSensor(): CSensor? = sensors.singleOrNull { it.getType() == CSensor.Type.FINISH }
@@ -126,12 +139,18 @@ class Course(private val file: File) {
 		sensors.singleOrNull { it.getType() == CSensor.Type.FINISH }?.apply {
 			sensors.remove(this)
 		}
-		sensors.add(CSensor.create(CSensor.Type.FINISH, location))
+		sensors.add(CSensor.create(CSensor.Type.FINISH, location, this))
 	}
 	
 	/***********************/
 	/** GETTERS / SETTERS **/
 	/***********************/
+	
+	fun getSpawn() = spawn
+	
+	fun setSpawn(location: Location) {
+		spawn = location
+	}
 	
 	fun getName() = name
 	
@@ -156,17 +175,22 @@ class Course(private val file: File) {
 	/***************/
 	
 	fun save() {
+		
 		// Initialize variables
 		val yaml = YamlConfiguration()
+		
 		// Add course attributes
 		yaml.set("name", name)
+		yaml.set("spawn", spawn?: "null")
 		yaml.set("mode", mode.name)
 		yaml.set("author", author)
+		
 		// Save Sensors
 		sensors.forEachIndexed { id, sensor ->
 			yaml.set("sensors.$id.type", sensor.getType())
 			yaml.set("sensors.$id.loc", sensor.getLocation())
 		}
+		
 		// Save Regions
 		regions.forEach { region ->
 			region.getBlocks().forEachIndexed { blockId, b ->
@@ -174,6 +198,7 @@ class Course(private val file: File) {
 				yaml.set("regions.${region.getIndex()}.$blockId.data", b.getBlockData().getAsString(true))
 			}
 		}
+		
 		// Save file
 		yaml.save(file)
 	}

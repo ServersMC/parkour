@@ -6,19 +6,19 @@ class PlayerData {
 	private var position = 0
 	private var timeStarted = 0L
 	
-	fun getCheckpoint(): CSensor? = checkpoint
+	fun getCheckpoint() = checkpoint
 	
 	fun setCheckpoint(sensor: CSensor) {
 		checkpoint = sensor
 	}
 	
-	fun getPosition(): Int = position
+	fun getPosition() = position
 	
 	fun setPosition(position: Int) {
 		this.position = position
 	}
 	
-	fun getTimeStarted(): Long = timeStarted
+	fun getTimeStarted() = timeStarted
 	
 	fun updateTimeStart() {
 		timeStarted = System.currentTimeMillis()

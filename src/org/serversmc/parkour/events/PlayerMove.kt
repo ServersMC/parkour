@@ -3,10 +3,10 @@ package org.serversmc.parkour.events
 import org.bukkit.event.*
 import org.bukkit.event.player.*
 
-object PlayerJoin : Listener {
+object PlayerMove: Listener {
 	
 	@EventHandler
-	fun onPlayerJoin(event: PlayerJoinEvent) {
+	fun onPlayerMove(event: PlayerMoveEvent) {
 	
 	}
 	

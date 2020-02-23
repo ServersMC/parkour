@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.*
 import org.serversmc.*
 import org.serversmc.parkour.commands.*
 import org.serversmc.parkour.events.*
+import org.serversmc.parkour.utils.*
 import org.serversmc.utils.*
 
 class Main : JavaPlugin() {
@@ -22,9 +23,10 @@ class Main : JavaPlugin() {
 		// Register Events
 		Bukkit.getPluginManager().apply {
 			// Stand-alone events
-			registerEvents(ParkourPlay, Parkour)
-			registerEvents(PlayerJoin, Parkour)
+			registerEvents(PlayerInteract, Parkour)
 			registerEvents(PlayerQuit, Parkour)
+			registerEvents(PlayerMove, Parkour)
+			registerEvents(EntityDamage, Parkour)
 			// Command events
 			registerEvents(CmdSetStart, Parkour)
 			registerEvents(CmdRegion, Parkour)
@@ -33,14 +35,18 @@ class Main : JavaPlugin() {
 			registerEvents(CmdAddCheck, Parkour)
 		}
 		// Load Courses
+		CourseManager.loadCourses()
 		
 		// Check for Update
+		// TODO
 		
 		// Done
 		Console.info("Loaded")
 	}
 	
 	override fun onDisable() {
+		// Save courses and show them
+		CourseManager.saveAndClose()
 		// Done
 		Console.info("Done")
 	}

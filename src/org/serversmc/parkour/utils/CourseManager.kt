@@ -9,6 +9,8 @@ object CourseManager {
 	private val dataFolder = File(Main.Parkour.dataFolder, "courses")
 	private val courses = ArrayList<Course>()
 	
+	fun getCourses() = courses
+	
 	fun createCourse(name: String): Course {
 		// Create file
 		val fileName = name.toLowerCase().replace(" ", "_")
@@ -36,6 +38,22 @@ object CourseManager {
 			if (it.name.endsWith(".day", true)) return@forEach
 			// Load Yaml
 			courses.add(Course(it))
+		}
+	}
+	
+	fun saveAndClose() {
+		courses.forEach { course ->
+			val temp = course.getPlayers()
+			temp.forEach {
+				course.removePlayer(it)
+			}
+			courses.remove(course)
+			course.hide()
+			temp.forEach {
+				val backup = it.world.getHighestBlockAt(it.location).location.add(0.0, 2.0, 0.0)
+				it.teleport(course.getSpawn() ?: backup)
+			}
+			course.show()
 		}
 	}
 	
