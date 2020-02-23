@@ -50,13 +50,13 @@ permissions:
     #░█▀▀█ ▒█▀▀▄ ▒█▀▄▀█ ▀█▀ ▒█▄░▒█
     #▒█▄▄█ ▒█░▒█ ▒█▒█▒█ ▒█░ ▒█▒█▒█
     #▒█░▒█ ▒█▄▄▀ ▒█░░▒█ ▄█▄ ▒█░░▀█
-    autorestart.admin:
+    parkour.admin:
         children: {}
     
     #░█▀▀█ ▒█░░░ ▒█░░░
     #▒█▄▄█ ▒█░░░ ▒█░░░
     #▒█░▒█ ▒█▄▄█ ▒█▄▄█
-    autorestart.*:
+    parkour.*:
         children:
             - parkour
             - parkour.help
