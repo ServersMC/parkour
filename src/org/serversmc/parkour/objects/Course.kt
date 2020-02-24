@@ -100,6 +100,10 @@ class Course(private val file: File) {
 	
 	fun getPlayerCheckpoint(player: Player) = players[player]!!.getCheckpoint()
 	
+	fun setPlayerCheckpoint(player: Player, sensor: CSensor) {
+		players[player]!!.setCheckpoint(sensor)
+	}
+	
 	/*************/
 	/** REGIONS **/
 	/*************/

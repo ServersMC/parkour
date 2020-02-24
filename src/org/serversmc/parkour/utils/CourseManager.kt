@@ -1,12 +1,12 @@
 package org.serversmc.parkour.utils
 
-import org.serversmc.parkour.core.*
+import org.serversmc.*
 import org.serversmc.parkour.objects.*
 import java.io.*
 
 object CourseManager {
 	
-	private val dataFolder = File(Main.Parkour.dataFolder, "courses")
+	private val dataFolder = File(PLUGIN.dataFolder, "courses")
 	private val courses = ArrayList<Course>()
 	
 	fun getCourses() = courses
@@ -38,7 +38,7 @@ object CourseManager {
 			if (it.name.endsWith(".day", true)) return@forEach
 			// Load Yaml
 			courses.add(Course(it))
-		}
+		} ?: dataFolder.mkdirs()
 	}
 	
 	fun saveAndClose() {

@@ -66,11 +66,8 @@ object PlayerInteract : Listener {
 			}
 			CSensor.Type.CHECKPOINT -> {
 				
-				// Try to get PlayerData
-				val playerData = course.getPlayerData(player)
-				
 				// Update player checkpoint
-				playerData.setCheckpoint(sensor)
+				course.setPlayerCheckpoint(player, sensor)
 				
 				// Prompt message
 				// TODO - Check point message
