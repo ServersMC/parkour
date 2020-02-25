@@ -3,6 +3,7 @@ package org.serversmc.parkour.objects
 import org.bukkit.*
 import org.bukkit.configuration.file.*
 import org.bukkit.entity.*
+import org.serversmc.parkour.utils.*
 import java.io.*
 
 class Course(private val file: File) {
@@ -155,6 +156,8 @@ class Course(private val file: File) {
 	/***********************/
 	/** GETTERS / SETTERS **/
 	/***********************/
+	
+	fun getId() = CourseManager.getCourses().indexOf(this)
 	
 	fun getViewDistance() = viewDistance
 	
