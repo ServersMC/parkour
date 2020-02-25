@@ -9,7 +9,7 @@ object EntityDamage : Listener {
 	
 	@EventHandler
 	fun onEntityDamageEvent(event: EntityDamageEvent) {
-	
+		
 		// Check if entity is not player
 		if (event.entityType != EntityType.PLAYER) return
 		
@@ -17,11 +17,11 @@ object EntityDamage : Listener {
 		val player = event.entity as Player
 		
 		// Check of player is not in a course
-		CourseManager.getCourses().singleOrNull { it.hasPlayer(player) }?: return
+		CourseManager.getCourses().singleOrNull { it.hasPlayer(player) } ?: return
 		
 		// Cancel fall damage
 		event.isCancelled = true
-	
+		
 	}
 	
 }

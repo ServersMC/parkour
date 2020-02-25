@@ -27,39 +27,30 @@ class Course(private val file: File) {
 	private var mode = Mode.CLOSED
 	
 	init {
-		
 		// Check if file exists
 		if (file.exists()) {
-			
 			// Load yaml file
 			val yaml = YamlConfiguration.loadConfiguration(file)
-			
 			// Initialize attributes
 			name = yaml.getString("name")!!
 			spawn = if (yaml.getString("spawn") == "null") null else yaml.get("spawn") as Location
 			mode = Mode.valueOf(yaml.getString("mode")!!)
 			author = yaml.getString("author")!!
-			
 			// Try to load sensors
 			val yamlSensors = yaml.getConfigurationSection("sections")
 			yamlSensors?.getKeys(false)?.forEach {
-				
 				// Check if section is valid
 				if (it == null) return@forEach
 				val section = yamlSensors.getConfigurationSection(it) ?: return@forEach
-				
 				// Load sensor
 				sensors.add(CSensor().apply { load(section) })
 			}
-			
 			// Try to load regions
 			val yamlRegions = yaml.getConfigurationSection("regions")
 			yamlRegions?.getKeys(false)?.forEach {
-				
 				// Check if section is valid
 				if (it == null) return@forEach
 				val section = yamlRegions.getConfigurationSection(it) ?: return@forEach
-				
 				// Load region
 				regions.add(CRegion().apply { load(section) })
 			}
@@ -194,22 +185,18 @@ class Course(private val file: File) {
 	/***************/
 	
 	fun save() {
-		
 		// Initialize variables
 		val yaml = YamlConfiguration()
-		
 		// Add course attributes
 		yaml.set("name", name)
 		yaml.set("spawn", spawn ?: "null")
 		yaml.set("mode", mode.name)
 		yaml.set("author", author)
-		
 		// Save Sensors
 		sensors.forEachIndexed { id, sensor ->
 			yaml.set("sensors.$id.type", sensor.getType())
 			yaml.set("sensors.$id.loc", sensor.getLocation())
 		}
-		
 		// Save Regions
 		regions.forEachIndexed { regionId, region ->
 			region.getBlocks().forEachIndexed { blockId, b ->
@@ -217,7 +204,6 @@ class Course(private val file: File) {
 				yaml.set("regions.$regionId.$blockId.data", b.getBlockData().getAsString(true))
 			}
 		}
-		
 		// Save file
 		yaml.save(file)
 	}

@@ -35,10 +35,9 @@ interface ICommand : CommandExecutor, TabCompleter, Listener {
 				usage = this@ICommand.getUsage()
 				description = this@ICommand.getDescription()
 			}
+			return
 		}
-		else {
-			SubCmdManager.addCommand(getSubCmd()!!, this)
-		}
+		SubCmdManager.addCommand(getSubCmd()!!, this)
 	}
 	
 	override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {

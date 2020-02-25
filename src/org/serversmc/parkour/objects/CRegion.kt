@@ -14,17 +14,13 @@ class CRegion {
 	private var max = Vector()
 	
 	fun load(section: ConfigurationSection) {
-		
 		// Load blocks
 		section.getKeys(false).forEach {
-			
 			// Set region id
 			id = section.parent!!.name.toInt()
-			
 			// Check if section is valid
 			if (it == null) return@forEach
 			val yamlBlock = section.getConfigurationSection(it) ?: return@forEach
-			
 			// Load block
 			blocks.add(CBlock().apply {
 				load(yamlBlock)
