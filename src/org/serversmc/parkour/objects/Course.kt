@@ -129,7 +129,7 @@ class Course(private val file: File) {
 	
 	fun getSensors() = sensors
 	
-	fun getStartSensor() = sensors.single { it.getType() == CSensor.Type.START }
+	fun getStartSensor() = sensors.singleOrNull { it.getType() == CSensor.Type.START }
 	
 	fun setStartSensor(location: Location) {
 		sensors.singleOrNull { it.getType() == CSensor.Type.START }?.apply {
@@ -144,7 +144,7 @@ class Course(private val file: File) {
 		sensors.add(CSensor.create(CSensor.Type.CHECKPOINT, location))
 	}
 	
-	fun getFinishSensor() = sensors.single { it.getType() == CSensor.Type.FINISH }
+	fun getFinishSensor() = sensors.singleOrNull { it.getType() == CSensor.Type.FINISH }
 	
 	fun setFinishSensor(location: Location) {
 		sensors.singleOrNull { it.getType() == CSensor.Type.FINISH }?.apply {
@@ -185,6 +185,10 @@ class Course(private val file: File) {
 	
 	fun getWins() = wins
 	
+	fun isReady(): Boolean {
+		return false
+	}
+	
 	/***************/
 	/** MODIFIERS **/
 	/***************/
@@ -196,7 +200,7 @@ class Course(private val file: File) {
 		
 		// Add course attributes
 		yaml.set("name", name)
-		yaml.set("spawn", spawn?: "null")
+		yaml.set("spawn", spawn ?: "null")
 		yaml.set("mode", mode.name)
 		yaml.set("author", author)
 		
