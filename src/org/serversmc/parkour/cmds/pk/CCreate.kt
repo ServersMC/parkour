@@ -4,15 +4,48 @@ import org.bukkit.command.*
 import org.bukkit.entity.*
 import org.bukkit.permissions.*
 import org.serversmc.parkour.cmds.*
+import org.serversmc.parkour.enums.*
 import org.serversmc.parkour.interfaces.*
+import org.serversmc.parkour.utils.*
 
 object CCreate : ICommand {
 	
 	override fun execute(sender: CommandSender, args: MutableList<out String>) {
+		// Initialize variable
+		val player: Player = sender as? Player ?: throw ICommand.PlayerOnlyCommand()
+		// Check if name is provided
+		if (args.isEmpty()) {
+			player.sendMessage("${RED}Please name your course: ${getUsage()}")
+			return
+		}
+		// Brew name for course
+		val rawName = ArrayList<String>()
+		args.forEach {
+			rawName.add(it)
+		}
+		val name = rawName.joinToString(" ").trim()
+		// Check if name is already in use
+		if (CourseManager.fileExists(name)) {
+			player.sendMessage("${RED}A course with that name already exists!")
+			return
+		}
+		// Create course
+		val course = CourseManager.createCourse(name)
+		// Prompt creation
+		player.sendMessage("${GREEN}Created course ${GOLD}${course.getName()}${GREEN}!")
+		player.sendMessage("${GREEN}Finish course setup to open to public! Type: ${GOLD}/parkour info")
 	}
 	
-	override fun tabComplete(player: Player, args: MutableList<out String>): MutableList<String>? = ArrayList()
-	override fun getDescription(): String = "Creates a new Parkour course"
+	override fun tabComplete(player: Player, args: MutableList<out String>): MutableList<String>? {
+		return if (args.isNotEmpty()) {
+			arrayOf("<name>").toMutableList()
+		}
+		else {
+			ArrayList()
+		}
+	}
+	
+	override fun getDescription(): String = "Creates a new parkour course"
 	override fun getLabel(): String = "CREATE"
 	override fun getPermDefault(): PermissionDefault = OP
 	override fun getPermString(): String = "parkour.create"

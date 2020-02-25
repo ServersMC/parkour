@@ -30,6 +30,17 @@ object CourseManager {
 		courses.remove(course)
 	}
 	
+	fun fileExists(name: String): Boolean {
+		// Create file
+		val fileName = name.toLowerCase().replace(" ", "_")
+		val file = File(dataFolder, "$fileName.dat")
+		// Check if course exists
+		if (file.exists()) {
+			return true
+		}
+		return false
+	}
+	
 	fun loadCourses() {
 		dataFolder.listFiles()?.forEach {
 			// Check if file is null
