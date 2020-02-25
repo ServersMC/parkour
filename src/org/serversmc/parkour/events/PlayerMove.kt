@@ -3,10 +3,9 @@ package org.serversmc.parkour.events
 import org.bukkit.entity.*
 import org.bukkit.event.*
 import org.bukkit.event.player.*
+import org.serversmc.parkour.enums.*
 import org.serversmc.parkour.objects.*
 import org.serversmc.parkour.utils.*
-import org.serversmc.protocol.*
-import org.serversmc.utils.ChatColor.BOLD
 import kotlin.math.*
 
 object PlayerMove : Listener {
@@ -41,7 +40,7 @@ object PlayerMove : Listener {
 		
 		regionPositionUpdate(player, course, region)
 		
-		outOfBoundsCheck(player, course, region)
+		outOfBoundsCheck(player, course)
 	}
 	
 	private fun regionPositionUpdate(player: Player, course: Course, region: CRegion?) {
@@ -64,7 +63,7 @@ object PlayerMove : Listener {
 		}
 	}
 	
-	private fun outOfBoundsCheck(player: Player, course: Course, region: CRegion?) {
+	private fun outOfBoundsCheck(player: Player, course: Course) {
 		
 		// Initialize variables
 		val pos = course.getPlayerPos(player)

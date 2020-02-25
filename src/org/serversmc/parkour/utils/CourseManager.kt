@@ -1,6 +1,6 @@
 package org.serversmc.parkour.utils
 
-import org.serversmc.*
+import org.serversmc.parkour.core.*
 import org.serversmc.parkour.objects.*
 import java.io.*
 
@@ -54,6 +54,7 @@ object CourseManager {
 				it.teleport(course.getSpawn() ?: backup)
 			}
 			course.show()
+			course.save()
 		}
 	}
 	

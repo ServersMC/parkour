@@ -2,19 +2,18 @@ package org.serversmc.parkour.core
 
 import org.bukkit.*
 import org.bukkit.plugin.java.*
-import org.serversmc.*
-import org.serversmc.interfaces.*
-import org.serversmc.parkour.commands.*
-import org.serversmc.parkour.commands.pk.*
+import org.serversmc.parkour.cmds.*
+import org.serversmc.parkour.cmds.pk.*
 import org.serversmc.parkour.events.*
 import org.serversmc.parkour.utils.*
-import org.serversmc.utils.*
 
-class Main : JavaPlugin(), APIPlugin {
+lateinit var PLUGIN: Main
+
+class Main : JavaPlugin() {
 	
 	override fun onEnable() {
 		// Initialize libraries
-		ServersMC.init(this)
+		PLUGIN = this
 		// Create Data folder
 		if (!dataFolder.exists()) dataFolder.mkdirs()
 		// Register commands
@@ -41,11 +40,12 @@ class Main : JavaPlugin(), APIPlugin {
 		Console.info("Done")
 	}
 	
-	override fun registerCommands() {
+	private fun registerCommands() {
 		// Main commands
-		CmdParkour.register()
+		CParkour.register()
 		// Parkour sub commands
-		CmdCreate.register()
+		CCreate.register()
+		CHelp.register()
 	}
 	
 }
