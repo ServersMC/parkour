@@ -28,7 +28,6 @@ description: "Add custom parkour courses with many effects, sounds, and a disapp
 commands:
     parkour:
         description: "Parkour Command"
-        permission: "parkour"
         usage: "/parkour"
         aliases:
             - "pk"

@@ -13,7 +13,6 @@ object CParkour : ICommand {
 	override fun execute(sender: CommandSender, args: MutableList<out String>) {
 		// Display header
 		sender.sendMessage("${RED}Parkour$GRAY - v${PLUGIN.description.version}")
-		
 		// Show help
 		CHelp.execute(sender, args)
 	}
