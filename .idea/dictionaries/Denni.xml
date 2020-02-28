@@ -2,10 +2,15 @@
   <dictionary name="Denni">
     <words>
       <w>addcheck</w>
+      <w>bukkit</w>
+      <w>cmds</w>
       <w>minecraft</w>
       <w>parkour</w>
       <w>serversmc</w>
+      <w>setspawn</w>
+      <w>setstart</w>
       <w>strikethrough</w>
+      <w>subcommand</w>
       <w>subcommands</w>
       <w>teleport</w>
     </words>

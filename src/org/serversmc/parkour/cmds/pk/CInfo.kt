@@ -13,29 +13,27 @@ import org.serversmc.parkour.utils.*
 object CInfo : ICommand {
 	
 	override fun execute(sender: CommandSender, args: MutableList<out String>) {
-		// Initialize variable
+		// Initialize variables
 		val course: Course
-		// Check if args are empty, to grab '/pk select' course from player
+		// Check args
 		if (args.isEmpty()) {
-			// Check if player is sender
-			val player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand())
-			// Check if player has course selected
-			if (CourseSelect.contains(player)) {
-				player.sendMessage("${RED}No course selected. Select a course using '${GRAY}/pk select${RED}'")
-				player.sendMessage("${RED}or using '$GRAY${getUsage()}$RED'")
+			// Initialize player
+			val player: Player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand("Please select a course, using course_id"))
+			// Check if player has a course selected
+			course = CourseSelect.get(player) ?: run {
+				ErrorMessage.noCourseSelect(sender, this)
 				return
 			}
-			// Select course
-			course = CourseSelect.get(player)!!
 		}
-		// Grab course using args
 		else {
+			// Translate args to int
 			val id = args[0].toIntOrNull() ?: run {
-				sender.sendMessage("${RED}Please enter a number!")
+				ErrorMessage.enterNumber(sender)
 				return
 			}
-			course = CourseManager.getCourses().getOrNull(id) ?: run {
-				sender.sendMessage("${RED}Course id '$GRAY$id$RED' not found!")
+			// Get course with ID
+			course = CourseManager.getCourses().singleOrNull { it.getId() == id } ?: run {
+				ErrorMessage.courseIdNotFound(sender, id)
 				return
 			}
 		}
@@ -45,15 +43,18 @@ object CInfo : ICommand {
 			val no = "${RED}false"
 			val yes = "${GREEN}true"
 			// Send messages
-			sender.sendMessage("${GRAY}id: ${GREEN}${getId()}")
-			sender.sendMessage("${GRAY}name: ${GREEN}${getName()}")
-			sender.sendMessage("${GRAY}isOpen: ${if (getMode() == Course.Mode.OPEN) yes else no}")
-			sender.sendMessage("${GRAY}hasSpawn: ${if (getSpawn() == null) no else yes}")
-			sender.sendMessage("${GRAY}hasStart: ${if (getStartSensor() == null) no else yes}")
-			sender.sendMessage("${GRAY}hasFinish: ${if (getFinishSensor() == null) no else yes}")
-			sender.sendMessage("${GRAY}regions: ${if (getRegions().isEmpty()) RED else GREEN}${getRegions().size}")
-			sender.sendMessage("${GRAY}checkpoints: ${if (getCheckpoints().isEmpty()) YELLOW else GREEN}${getCheckpoints().size}")
-			sender.sendMessage("${GRAY}isReady: ${if (isReady()) yes else no}")
+			sender.sendMessage("$GRAY  id: ${GREEN}${getId()}")
+			sender.sendMessage("$GRAY  name: ${GREEN}${getName()}")
+			sender.sendMessage("$GRAY  isOpen: ${if (getMode() == Course.Mode.OPEN) yes else no}")
+			sender.sendMessage("$GRAY  hasSpawn: ${if (getSpawn() == null) no else yes}")
+			sender.sendMessage("$GRAY  hasStart: ${if (getStartSensor() == null) no else yes}")
+			sender.sendMessage("$GRAY  hasFinish: ${if (getFinishSensor() == null) no else yes}")
+			sender.sendMessage("$GRAY  regions: ${if (getRegions().isEmpty()) RED else GREEN}${getRegions().size}")
+			sender.sendMessage("$GRAY  checkpoints: ${if (getCheckpoints().isEmpty()) YELLOW else GREEN}${getCheckpoints().size}")
+			sender.sendMessage("$GRAY  isReady: ${if (isReady()) yes else no}")
+			if (!isReady()) {
+				sender.sendMessage("${YELLOW}To make course ready, fix items in red!")
+			}
 		}
 	}
 	

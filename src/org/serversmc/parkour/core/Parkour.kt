@@ -36,6 +36,9 @@ class Main : JavaPlugin() {
 	override fun onDisable() {
 		// Save courses and show them
 		CourseManager.saveAndClose()
+		// Clear managers
+		CourseSelect.clear()
+		EventTracker.clear()
 		// Done
 		Console.info("Done")
 	}
@@ -46,6 +49,9 @@ class Main : JavaPlugin() {
 		// Parkour sub commands
 		CCreate.register()
 		CHelp.register()
+		CInfo.register()
+		CSetSpawn.register()
+		CSetStart.register()
 	}
 	
 }

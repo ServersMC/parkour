@@ -8,10 +8,6 @@ object CourseSelect {
 	private val selected = HashMap<Player, Course>()
 	
 	fun add(player: Player, course: Course) {
-		if (selected.containsKey(player)) {
-			selected.replace(player, course)
-			return
-		}
 		selected[player] = course
 	}
 	
@@ -28,5 +24,9 @@ object CourseSelect {
 	fun get(player: Player) = selected[player]
 	
 	fun get(course: Course) = ArrayList<Player>().apply { addAll(selected.filterValues { it == course }.keys) }
+	
+	fun clear() {
+		selected.clear()
+	}
 	
 }

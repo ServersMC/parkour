@@ -5,6 +5,10 @@ import org.bukkit.configuration.file.*
 import org.bukkit.entity.*
 import org.serversmc.parkour.utils.*
 import java.io.*
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.math.*
 
 class Course(private val file: File) {
 	
@@ -21,7 +25,7 @@ class Course(private val file: File) {
 	private var plays = 0
 	private var wins = 0
 	
-	private lateinit var author: String
+	private lateinit var author: UUID
 	private var spawn: Location? = null
 	private var name = file.nameWithoutExtension
 	private var mode = Mode.CLOSED
@@ -33,11 +37,11 @@ class Course(private val file: File) {
 			val yaml = YamlConfiguration.loadConfiguration(file)
 			// Initialize attributes
 			name = yaml.getString("name")!!
-			spawn = if (yaml.getString("spawn") == "null") null else yaml.get("spawn") as Location
+			spawn = yaml.get("spawn") as? Location
 			mode = Mode.valueOf(yaml.getString("mode")!!)
-			author = yaml.getString("author")!!
+			author = UUID.fromString(yaml.getString("author")!!)
 			// Try to load sensors
-			val yamlSensors = yaml.getConfigurationSection("sections")
+			val yamlSensors = yaml.getConfigurationSection("sensors")
 			yamlSensors?.getKeys(false)?.forEach {
 				// Check if section is valid
 				if (it == null) return@forEach
@@ -120,6 +124,13 @@ class Course(private val file: File) {
 	
 	fun getSensors() = sensors
 	
+	fun hasSensor(location: Location): Boolean {
+		sensors.forEach { if (it.getLocation() == location) return true }
+		return false
+	}
+	
+	fun getSensor(location: Location) = sensors.singleOrNull { it.getLocation() == location }
+	
 	fun getStartSensor() = sensors.singleOrNull { it.getType() == CSensor.Type.START }
 	
 	fun setStartSensor(location: Location) {
@@ -155,7 +166,13 @@ class Course(private val file: File) {
 	fun getSpawn() = spawn
 	
 	fun setSpawn(location: Location) {
-		spawn = location
+		val tempLocation = location.clone()
+		tempLocation.x = location.blockX + 0.5
+		tempLocation.y = location.blockY + 0.5
+		tempLocation.z = location.blockZ + 0.5
+		tempLocation.pitch = ((location.pitch / 15).roundToInt() * 15f)
+		tempLocation.yaw = (location.yaw / 15).roundToInt() * 15f
+		spawn = tempLocation.clone()
 	}
 	
 	fun getName() = name
@@ -171,6 +188,10 @@ class Course(private val file: File) {
 	}
 	
 	fun getAuthor() = author
+	
+	fun setAuthor(player: Player) {
+		author = player.uniqueId
+	}
 	
 	fun getPlays() = plays
 	
@@ -189,12 +210,12 @@ class Course(private val file: File) {
 		val yaml = YamlConfiguration()
 		// Add course attributes
 		yaml.set("name", name)
-		yaml.set("spawn", spawn ?: "null")
+		yaml.set("spawn", spawn)
 		yaml.set("mode", mode.name)
-		yaml.set("author", author)
+		yaml.set("author", author.toString())
 		// Save Sensors
 		sensors.forEachIndexed { id, sensor ->
-			yaml.set("sensors.$id.type", sensor.getType())
+			yaml.set("sensors.$id.type", sensor.getType().name)
 			yaml.set("sensors.$id.loc", sensor.getLocation())
 		}
 		// Save Regions

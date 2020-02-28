@@ -8,6 +8,19 @@ object PlayerQuit : Listener {
 	
 	@EventHandler
 	fun onPlayerQuit(event: PlayerQuitEvent) {
+		removePlayerFromCourse(event)
+		removePlayerFromListeners(event)
+	}
+	
+	private fun removePlayerFromListeners(event: PlayerQuitEvent) {
+		// Initialize variables
+		val player = event.player
+		// Remove player from all player tracking
+		CourseSelect.remove(player)
+		EventTracker.remove(player, false)
+	}
+	
+	private fun removePlayerFromCourse(event: PlayerQuitEvent) {
 		// Initialize variables
 		val player = event.player
 		// Try to get course player is in

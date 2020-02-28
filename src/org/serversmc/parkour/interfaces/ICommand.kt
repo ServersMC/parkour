@@ -12,7 +12,31 @@ import org.serversmc.parkour.utils.*
 @Suppress("warnings")
 interface ICommand : CommandExecutor, TabCompleter, Listener {
 	
-	class PlayerOnlyCommand : Exception()
+	object SubCmdManager {
+		
+		private val subCmds = HashMap<ICommand, ArrayList<ICommand>>()
+		
+		fun getSubCommands(cmd: ICommand) = subCmds[cmd] ?: ArrayList()
+		
+		fun addCommand(parent: ICommand, child: ICommand) {
+			subCmds[parent]?.apply {
+				add(child)
+			} ?: subCmds.set(parent, ArrayList<ICommand>().apply {
+				add(child)
+			})
+		}
+		
+	}
+	
+	class PlayerOnlyCommand() : Exception() {
+		var s: String? = null
+		
+		constructor(s: String) : this() {
+			this.s = s
+		}
+		
+		override val message: String? get() = s
+	}
 	
 	val TRUE get() = PermissionDefault.TRUE
 	val FALSE get() = PermissionDefault.FALSE
@@ -37,10 +61,13 @@ interface ICommand : CommandExecutor, TabCompleter, Listener {
 			}
 			return
 		}
+		// Add sub command to array in SubCmdManager
 		SubCmdManager.addCommand(getSubCmd()!!, this)
 	}
 	
 	override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+		// Display header
+		sender.sendMessage("${RED}Parkour$GRAY - v${PLUGIN.description.version}")
 		// Check if sender has permission
 		if (!sender.hasPermission(getPermission()))
 			sender.sendMessage("${RED}You don't have permission to use this command!")
@@ -70,6 +97,9 @@ interface ICommand : CommandExecutor, TabCompleter, Listener {
 			// Catch any exceptions
 		} catch (e: PlayerOnlyCommand) {
 			sender.sendMessage("${RED} This is a player only command")
+			if (e.message != null) {
+				sender.sendMessage("$RED${e.message}")
+			}
 		} catch (e: Exception) {
 			Console.catchError(e, "ICommand.onCommand(CommandSender, Command, String, Array<out String>): Boolean")
 		}
@@ -96,21 +126,5 @@ interface ICommand : CommandExecutor, TabCompleter, Listener {
 	fun getDescription(): String
 	fun hasListener(): Boolean
 	fun getSubCmd(): ICommand?
-	
-}
-
-object SubCmdManager {
-	
-	private val subCmds = HashMap<ICommand, ArrayList<ICommand>>()
-	
-	fun getSubCommands(cmd: ICommand) = subCmds[cmd] ?: ArrayList()
-	
-	fun addCommand(parent: ICommand, child: ICommand) {
-		subCmds[parent]?.apply {
-			add(child)
-		} ?: subCmds.set(parent, ArrayList<ICommand>().apply {
-			add(child)
-		})
-	}
 	
 }

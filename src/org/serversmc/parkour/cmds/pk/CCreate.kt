@@ -25,15 +25,16 @@ object CCreate : ICommand {
 		}
 		val name = rawName.joinToString(" ").trim()
 		// Check if name is already in use
-		if (CourseManager.fileExists(name)) {
+		if (CourseManager.courseExists(name)) {
 			player.sendMessage("${RED}A course with that name already exists!")
 			return
 		}
 		// Create course
 		val course = CourseManager.createCourse(name)
+		course.setAuthor(player)
 		// Prompt creation
 		player.sendMessage("${GREEN}Created course ${GOLD}${course.getName()}${GREEN}!")
-		player.sendMessage("${GREEN}Finish course setup to open to public! Type: ${GOLD}/parkour info")
+		player.sendMessage("${GREEN}Finish course setup using: ${GOLD}/parkour info")
 	}
 	
 	override fun tabComplete(player: Player, args: MutableList<out String>): MutableList<String>? {
