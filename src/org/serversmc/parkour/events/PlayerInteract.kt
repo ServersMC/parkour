@@ -3,6 +3,7 @@ package org.serversmc.parkour.events
 import org.bukkit.event.*
 import org.bukkit.event.block.*
 import org.bukkit.event.player.*
+import org.serversmc.parkour.enums.*
 import org.serversmc.parkour.objects.*
 import org.serversmc.parkour.utils.*
 
@@ -15,13 +16,7 @@ object PlayerInteract : Listener {
 		// Initialize variables
 		val player = event.player
 		val block = event.clickedBlock ?: return
-		lateinit var sensor: CSensor
-		lateinit var course: Course
-		// Find course
-		CourseManager.getCourses().forEach { courseSearch ->
-			sensor = courseSearch.getSensors().singleOrNull { it.getLocation() == block.location } ?: return@forEach
-			course = courseSearch
-		}
+		val (course, sensor) = CourseManager.getSensor(block.location) ?: return
 		// Flow Control
 		when (sensor.getType()) {
 			CSensor.Type.START -> {
@@ -29,11 +24,11 @@ object PlayerInteract : Listener {
 				if (course.hasPlayer(player)) return
 				// Check if course is open
 				if (course.getMode() == Course.Mode.CLOSED) {
-					// TODO - course is closed message
+					TitleAPI.sendTitle(player, 5, 100, 5, "${RED}Closed!", "${GRAY}This course is currently not open")
 					return
 				}
 				// Give instructions
-				// TODO - Give instructions to jump to next block to start
+				TitleAPI.sendTitle(player, 5, 1000, 5, "${YELLOW}Jump to next block", "${YELLOW}to begin")
 				// Add player to course
 				course.addPlayer(player)
 			}
@@ -53,7 +48,7 @@ object PlayerInteract : Listener {
 				// Update player checkpoint
 				course.setPlayerCheckpoint(player, sensor)
 				// Prompt message
-				// TODO - Check point message
+				TitleAPI.sendTitle(player, 5, 30, 5, "$AQUA${BOLD}Checkpoint!", null)
 			}
 		}
 	}

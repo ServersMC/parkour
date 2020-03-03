@@ -50,6 +50,7 @@ class Main : JavaPlugin() {
 		CCreate.register()
 		CHelp.register()
 		CInfo.register()
+		CList.register()
 		CSetSpawn.register()
 		CSetStart.register()
 	}
