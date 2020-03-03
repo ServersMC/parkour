@@ -51,6 +51,7 @@ class Main : JavaPlugin() {
 		CHelp.register()
 		CInfo.register()
 		CList.register()
+		CSelect.register()
 		CSetSpawn.register()
 		CSetStart.register()
 	}
