@@ -16,7 +16,7 @@ object PlayerQuit : Listener {
 		// Initialize variables
 		val player = event.player
 		// Remove player from all player tracking
-		CourseSelect.remove(player)
+		SelectManager.remove(player)
 		EventTracker.remove(player, false)
 	}
 	

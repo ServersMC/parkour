@@ -16,11 +16,11 @@ object CSelect : ICommand {
 		// Check argument length
 		if (args.isEmpty()) {
 			// Check if player selected a course
-			if (CourseSelect.contains(player)) {
+			if (SelectManager.contains(player)) {
 				// Get course selected
-				val course = CourseSelect.get(player)!!
+				val course = SelectManager.get(player)!!
 				// Deselect player
-				CourseSelect.remove(player)
+				SelectManager.remove(player)
 				// Prompt message
 				player.sendMessage("${GREEN}Deselected course $GRAY${course.getName()}")
 			}
@@ -37,7 +37,7 @@ object CSelect : ICommand {
 			return
 		}
 		// Select course to player
-		CourseSelect.add(player, course)
+		SelectManager.add(player, course)
 		// Prompt message
 		player.sendMessage("${GREEN}Selected course $GRAY${course.getName()}")
 	}

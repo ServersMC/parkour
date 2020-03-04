@@ -3,7 +3,7 @@ package org.serversmc.parkour.utils
 import org.bukkit.entity.*
 import org.serversmc.parkour.objects.*
 
-object CourseSelect {
+object SelectManager {
 	
 	private val selected = HashMap<Player, Course>()
 	

@@ -16,7 +16,7 @@ interface ITrackedEvent {
 		// Check if args are empty
 		if (args.isEmpty()) {
 			// Check if player has a course selected
-			course = CourseSelect.get(player) ?: run {
+			course = SelectManager.get(player) ?: run {
 				ErrorMessage.noCourseSelect(player, this as ICommand)
 				return
 			}

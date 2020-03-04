@@ -37,7 +37,7 @@ class Main : JavaPlugin() {
 		// Save courses and show them
 		CourseManager.saveAndClose()
 		// Clear managers
-		CourseSelect.clear()
+		SelectManager.clear()
 		EventTracker.clear()
 		// Done
 		Console.info("Done")

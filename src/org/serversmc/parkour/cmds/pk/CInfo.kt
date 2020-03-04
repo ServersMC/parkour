@@ -20,7 +20,7 @@ object CInfo : ICommand {
 			// Initialize player
 			val player: Player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand("  Please select a course, using course_id"))
 			// Check if player has a course selected
-			course = CourseSelect.get(player) ?: run {
+			course = SelectManager.get(player) ?: run {
 				ErrorMessage.noCourseSelect(sender, this)
 				return
 			}
