@@ -2,6 +2,7 @@ package org.serversmc.parkour.events
 
 import org.bukkit.entity.*
 import org.bukkit.event.*
+import org.bukkit.event.entity.*
 import org.bukkit.event.player.*
 import org.serversmc.parkour.enums.*
 import org.serversmc.parkour.objects.*
@@ -76,6 +77,16 @@ object PlayerMove : Listener {
 				TitleAPI.sendTitle(player, 10, 20, 10, "", "${BOLD}Try again!")
 			}
 		}
+	}
+	
+	@EventHandler
+	fun onPlayerDamage(event: EntityDamageEvent) {
+		// Initialize variables
+		val player = event.entity as? Player ?: return
+		// Check of player is not in a course
+		CourseManager.getCourses().singleOrNull { it.hasPlayer(player) } ?: return
+		// Cancel fall damage
+		event.isCancelled = true
 	}
 	
 }

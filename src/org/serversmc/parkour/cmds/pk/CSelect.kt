@@ -49,7 +49,7 @@ object CSelect : ICommand {
 	override fun getLabel(): String = "SELECT"
 	override fun getPermString(): String = "parkour.select"
 	override fun getPermDefault(): PermissionDefault = OP
-	override fun getUsage(): String = "/parkour select <course_id>"
+	override fun getUsage(): String = "/pk select <id>"
 	override fun getDescription(): String = "Select a parkour course for editing"
 	override fun hasListener(): Boolean = false
 	override fun getSubCmd(): ICommand? = CParkour

@@ -15,7 +15,7 @@ object CHelp : ICommand {
 			// Check if sender has permission
 			if (!sender.hasPermission(getPermission())) return
 			// Send sub command usage
-			sender.sendMessage("${GRAY}${it.getUsage()} ${RED}- ${GRAY}${it.getDescription()}")
+			sender.sendMessage("${GRAY}${it.getUsage()} ${RED}* ${WHITE}${it.getDescription()}")
 		}
 	}
 	
@@ -25,7 +25,7 @@ object CHelp : ICommand {
 	override fun getPermDefault(): PermissionDefault = TRUE
 	override fun getPermString(): String = "parkour.help"
 	override fun getSubCmd(): ICommand? = CParkour
-	override fun getUsage(): String = "/parkour help"
+	override fun getUsage(): String = "/pk help"
 	override fun hasListener(): Boolean = false
 	
 }

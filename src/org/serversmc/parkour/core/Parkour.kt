@@ -20,10 +20,9 @@ class Main : JavaPlugin() {
 		registerCommands()
 		// Register Events
 		Bukkit.getPluginManager().apply {
-			registerEvents(PlayerInteract, PLUGIN)
+			registerEvents(SensorInteract, PLUGIN)
 			registerEvents(PlayerQuit, PLUGIN)
 			registerEvents(PlayerMove, PLUGIN)
-			registerEvents(EntityDamage, PLUGIN)
 		}
 		// Load Courses
 		CourseManager.loadCourses()
@@ -48,10 +47,12 @@ class Main : JavaPlugin() {
 		CParkour.register()
 		// Parkour sub commands
 		CCreate.register()
+		CDelete.register()
 		CHelp.register()
 		CInfo.register()
 		CList.register()
 		CSelect.register()
+		CSetFinish.register()
 		CSetSpawn.register()
 		CSetStart.register()
 	}

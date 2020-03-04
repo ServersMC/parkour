@@ -46,12 +46,12 @@ object CCreate : ICommand {
 		}
 	}
 	
-	override fun getDescription(): String = "Creates a new parkour course"
+	override fun getDescription(): String = "Creates and selects a course"
 	override fun getLabel(): String = "CREATE"
 	override fun getPermDefault(): PermissionDefault = OP
 	override fun getPermString(): String = "parkour.create"
 	override fun getSubCmd(): ICommand? = CParkour
-	override fun getUsage(): String = "/parkour create <name>"
+	override fun getUsage(): String = "/pk create <name>"
 	override fun hasListener(): Boolean = false
 	
 }

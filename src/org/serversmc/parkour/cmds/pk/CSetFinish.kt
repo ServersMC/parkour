@@ -13,15 +13,16 @@ import org.serversmc.parkour.interfaces.*
 import org.serversmc.parkour.objects.*
 import org.serversmc.parkour.utils.*
 
-object CSetStart : ICommand, ITrackedEvent {
+object CSetFinish : ICommand, ITrackedEvent {
 	
-	override val start: String get() = "${GREEN}Click on a pressure plate to select new start position"
-	override val canceled: String get() = "${RED}Canceled start position set"
-	override val inUse: String get() = "${GRAY}${EventTracker.getPlayer(this)!!.name} ${RED}is already setting a start position!"
+	
+	override val start: String get() = "${GREEN}Click on a pressure plate to select new finish position"
+	override val canceled: String get() = "${RED}Canceled finish position set"
+	override val inUse: String get() = "$GRAY${EventTracker.getPlayer(this)!!.name} ${RED}is already setting a finish position!"
 	
 	override fun execute(sender: CommandSender, args: MutableList<out String>) {
 		// Initialize variables
-		val player: Player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand("Please select a course, using course_id"))
+		val player: Player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand())
 		// Register player to EventTracker
 		registerPlayer(player, args)
 	}
@@ -53,7 +54,7 @@ object CSetStart : ICommand, ITrackedEvent {
 				// Check if sensor is part of selected course
 				if (course != parent) {
 					// Prompt message
-					player.sendMessage("${RED}This block is part of course '${GRAY}${parent.getName()}${RED}'!")
+					player.sendMessage("${RED}This block is part of course '$GRAY${parent.getName()}$RED'!")
 					EventTracker.remove(player, true)
 					return
 				}
@@ -67,22 +68,22 @@ object CSetStart : ICommand, ITrackedEvent {
 				return
 			}
 			// Update course start position and prompt message
-			course.setStartSensor(block.location)
-			player.sendMessage("${GREEN}Updated start position for course '${GRAY}${course.getName()}${GREEN}'!")
+			course.setFinishSensor(block.location)
+			player.sendMessage("${GREEN}Updated finish position for course '$GRAY${course.getName()}$GREEN'!")
 			EventTracker.remove(player, false)
 		}
 		else {
 			// Prompt incorrect block clicked
-			player.sendMessage("${RED}Please select a ${GRAY}Pressure Plate${RED}!")
+			player.sendMessage("${RED}Please select a ${GRAY}Pressure Plate$RED!")
 		}
 	}
 	
 	override fun tabComplete(player: Player, args: MutableList<out String>): MutableList<String>? = ArrayList()
-	override fun getLabel(): String = "SETSTART"
-	override fun getPermString(): String = "parkour.setstart"
+	override fun getLabel(): String = "SETFINISH"
+	override fun getPermString(): String = "parkour.setfinish"
 	override fun getPermDefault(): PermissionDefault = OP
-	override fun getUsage(): String = "/pk setstart"
-	override fun getDescription(): String = "Updates the course start position"
+	override fun getUsage(): String = "/pk setfinish"
+	override fun getDescription(): String = "Updates the course finish position"
 	override fun hasListener(): Boolean = true
 	override fun getSubCmd(): ICommand? = CParkour
 	

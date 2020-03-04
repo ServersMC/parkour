@@ -14,28 +14,12 @@ object CInfo : ICommand {
 	
 	override fun execute(sender: CommandSender, args: MutableList<out String>) {
 		// Initialize variables
+		val player: Player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand())
 		val course: Course
-		// Check args
-		if (args.isEmpty()) {
-			// Initialize player
-			val player: Player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand("  Please select a course, using course_id"))
-			// Check if player has a course selected
-			course = SelectManager.get(player) ?: run {
-				ErrorMessenger.noCourseSelect(sender, this)
-				return
-			}
-		}
-		else {
-			// Translate args to int
-			val id = args[0].toIntOrNull() ?: run {
-				ErrorMessenger.enterNumber(sender)
-				return
-			}
-			// Get course with ID
-			course = CourseManager.getCourses().singleOrNull { it.getId() == id } ?: run {
-				ErrorMessenger.courseIdNotFound(sender, id)
-				return
-			}
+		// Check if player has a course selected
+		course = SelectManager.get(player) ?: run {
+			ErrorMessenger.noCourseSelect(sender, this)
+			return
 		}
 		// Show info
 		course.apply {
@@ -62,8 +46,8 @@ object CInfo : ICommand {
 	override fun getLabel(): String = "INFO"
 	override fun getPermString(): String = "parkour.info"
 	override fun getPermDefault(): PermissionDefault = OP
-	override fun getUsage(): String = "/parkour info <course_id>"
-	override fun getDescription(): String = "Gets the info of the '/pk select' course, or from course_id"
+	override fun getUsage(): String = "/pk info"
+	override fun getDescription(): String = "Gets the info of the selected course"
 	override fun hasListener(): Boolean = false
 	override fun getSubCmd(): ICommand? = CParkour
 	

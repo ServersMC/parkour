@@ -45,8 +45,8 @@ object CSetSpawn : ICommand {
 	override fun getLabel(): String = "SETSPAWN"
 	override fun getPermString(): String = "parkour.setspawn"
 	override fun getPermDefault(): PermissionDefault = OP
-	override fun getUsage(): String = "/parkour setspawn <course_id>"
-	override fun getDescription(): String = "Set the spawn for parkour course"
+	override fun getUsage(): String = "/pk setspawn"
+	override fun getDescription(): String = "Sets the course spawn"
 	override fun hasListener(): Boolean = false
 	override fun getSubCmd(): ICommand? = CParkour
 	
