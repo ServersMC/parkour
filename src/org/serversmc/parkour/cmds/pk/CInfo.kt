@@ -21,19 +21,19 @@ object CInfo : ICommand {
 			val player: Player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand("  Please select a course, using course_id"))
 			// Check if player has a course selected
 			course = SelectManager.get(player) ?: run {
-				ErrorMessage.noCourseSelect(sender, this)
+				ErrorMessenger.noCourseSelect(sender, this)
 				return
 			}
 		}
 		else {
 			// Translate args to int
 			val id = args[0].toIntOrNull() ?: run {
-				ErrorMessage.enterNumber(sender)
+				ErrorMessenger.enterNumber(sender)
 				return
 			}
 			// Get course with ID
 			course = CourseManager.getCourses().singleOrNull { it.getId() == id } ?: run {
-				ErrorMessage.courseIdNotFound(sender, id)
+				ErrorMessenger.courseIdNotFound(sender, id)
 				return
 			}
 		}

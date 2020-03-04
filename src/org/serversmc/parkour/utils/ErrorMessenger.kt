@@ -4,7 +4,7 @@ import org.bukkit.command.*
 import org.serversmc.parkour.enums.*
 import org.serversmc.parkour.interfaces.*
 
-object ErrorMessage {
+object ErrorMessenger {
 	
 	/**
 	 * Please enter a number

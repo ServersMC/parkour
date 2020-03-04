@@ -17,19 +17,19 @@ interface ITrackedEvent {
 		if (args.isEmpty()) {
 			// Check if player has a course selected
 			course = SelectManager.get(player) ?: run {
-				ErrorMessage.noCourseSelect(player, this as ICommand)
+				ErrorMessenger.noCourseSelect(player, this as ICommand)
 				return
 			}
 		}
 		else {
 			// Translate args to int
 			val id = args[0].toIntOrNull() ?: run {
-				ErrorMessage.enterNumber(player)
+				ErrorMessenger.enterNumber(player)
 				return
 			}
 			// Get course with ID
 			course = CourseManager.getCourses().singleOrNull { it.getId() == id } ?: run {
-				ErrorMessage.courseIdNotFound(player, id)
+				ErrorMessenger.courseIdNotFound(player, id)
 				return
 			}
 		}

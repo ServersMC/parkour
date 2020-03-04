@@ -31,12 +31,12 @@ object CSelect : ICommand {
 		}
 		// Translate args to int
 		val id = args[0].toIntOrNull() ?: run {
-			ErrorMessage.enterNumber(sender)
+			ErrorMessenger.enterNumber(sender)
 			return
 		}
 		// Get course with ID
 		val course = CourseManager.getCourses().singleOrNull { it.getId() == id } ?: run {
-			ErrorMessage.courseIdNotFound(sender, id)
+			ErrorMessenger.courseIdNotFound(sender, id)
 			return
 		}
 		// Select course to player
