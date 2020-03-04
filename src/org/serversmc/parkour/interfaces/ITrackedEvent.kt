@@ -1,7 +1,6 @@
 package org.serversmc.parkour.interfaces
 
 import org.bukkit.entity.*
-import org.serversmc.parkour.objects.*
 import org.serversmc.parkour.utils.*
 
 interface ITrackedEvent {
@@ -10,33 +9,20 @@ interface ITrackedEvent {
 	val canceled: String
 	val inUse: String
 	
-	fun registerPlayer(player: Player, args: MutableList<out String>) {
+	fun registerPlayer(player: Player) {
 		// Initialize course variable
-		val course: Course
-		// Check if args are empty
-		if (args.isEmpty()) {
-			// Check if player has a course selected
-			course = SelectManager.get(player) ?: run {
-				ErrorMessenger.noCourseSelect(player, this as ICommand)
-				return
-			}
-		}
-		else {
-			// Translate args to int
-			val id = args[0].toIntOrNull() ?: run {
-				ErrorMessenger.enterNumber(player)
-				return
-			}
-			// Get course with ID
-			course = CourseManager.getCourses().singleOrNull { it.getId() == id } ?: run {
-				ErrorMessenger.courseIdNotFound(player, id)
-				return
-			}
+		val course = SelectManager.get(player) ?: run {
+			ErrorMessenger.noCourseSelect(player)
+			return
 		}
 		// Check if player is in a tracking list
 		if (EventTracker.containsPlayer(player)) {
+			// Check if player is using this command
+			if (EventTracker.getTracker(player)!!.event == this as ICommand) {
+				EventTracker.remove(player, true)
+				return
+			}
 			EventTracker.remove(player, true)
-			return
 		}
 		// Check if command is already in use
 		if (EventTracker.containsTracker(this)) {

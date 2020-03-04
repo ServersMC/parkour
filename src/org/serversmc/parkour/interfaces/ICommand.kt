@@ -67,7 +67,7 @@ interface ICommand : CommandExecutor, TabCompleter, Listener {
 	
 	override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
 		// Display header
-		sender.sendMessage("${RED}Parkour$GRAY - v${PLUGIN.description.version}")
+		sender.sendMessage("${WHITE}-{ ${AQUA}Parkour$GRAY - v${PLUGIN.description.version} ${WHITE}}-")
 		// Check if sender has permission
 		if (!sender.hasPermission(getPermission()))
 			sender.sendMessage("${RED}You don't have permission to use this command!")

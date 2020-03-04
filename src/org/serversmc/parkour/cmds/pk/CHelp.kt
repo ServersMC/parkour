@@ -15,7 +15,7 @@ object CHelp : ICommand {
 			// Check if sender has permission
 			if (!sender.hasPermission(getPermission())) return
 			// Send sub command usage
-			sender.sendMessage("${GRAY}${it.getUsage()} ${RED}* ${WHITE}${it.getDescription()}")
+			sender.sendMessage("${AQUA}${it.getUsage()} ${GRAY}: ${WHITE}${it.getDescription()}")
 		}
 	}
 	

@@ -133,10 +133,11 @@ class Course(private val file: File) {
 	
 	fun getStartSensor() = sensors.singleOrNull { it.getType() == CSensor.Type.START }
 	
-	fun setStartSensor(location: Location) {
+	fun setStartSensor(location: Location?) {
 		sensors.singleOrNull { it.getType() == CSensor.Type.START }?.apply {
 			sensors.remove(this)
 		}
+		if (location == null) return
 		sensors.add(CSensor.create(CSensor.Type.START, location))
 	}
 	
@@ -148,10 +149,11 @@ class Course(private val file: File) {
 	
 	fun getFinishSensor() = sensors.singleOrNull { it.getType() == CSensor.Type.FINISH }
 	
-	fun setFinishSensor(location: Location) {
+	fun setFinishSensor(location: Location?) {
 		sensors.singleOrNull { it.getType() == CSensor.Type.FINISH }?.apply {
 			sensors.remove(this)
 		}
+		if (location == null) return
 		sensors.add(CSensor.create(CSensor.Type.FINISH, location))
 	}
 	

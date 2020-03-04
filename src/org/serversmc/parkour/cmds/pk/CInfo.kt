@@ -18,7 +18,7 @@ object CInfo : ICommand {
 		val course: Course
 		// Check if player has a course selected
 		course = SelectManager.get(player) ?: run {
-			ErrorMessenger.noCourseSelect(sender, this)
+			ErrorMessenger.noCourseSelect(sender)
 			return
 		}
 		// Show info

@@ -2,7 +2,6 @@ package org.serversmc.parkour.utils
 
 import org.bukkit.command.*
 import org.serversmc.parkour.enums.*
-import org.serversmc.parkour.interfaces.*
 
 object ErrorMessenger {
 	
@@ -22,11 +21,9 @@ object ErrorMessenger {
 	
 	/**
 	 * No course selected. Select a course using '/pk select'
-	 * or using 'cmd.getUsage()'
 	 */
-	fun noCourseSelect(sender: CommandSender, cmd: ICommand) {
+	fun noCourseSelect(sender: CommandSender) {
 		sender.sendMessage("${RED}No course selected. Select a course using '$GRAY/pk select$RED'")
-		sender.sendMessage("${RED}or using '$GRAY${cmd.getUsage()}$RED'")
 	}
 	
 }

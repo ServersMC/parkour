@@ -24,7 +24,7 @@ object CSetFinish : ICommand, ITrackedEvent {
 		// Initialize variables
 		val player: Player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand())
 		// Register player to EventTracker
-		registerPlayer(player, args)
+		registerPlayer(player)
 	}
 	
 	@EventHandler
@@ -60,12 +60,17 @@ object CSetFinish : ICommand, ITrackedEvent {
 				}
 				// Switch case sensor type
 				when (sensor.getType()) {
-					CSensor.Type.START -> player.sendMessage("${YELLOW}This is already the start position!")
-					CSensor.Type.FINISH -> player.sendMessage("${RED}This block is the finish position!")
-					CSensor.Type.CHECKPOINT -> player.sendMessage("${RED}This block is a checkpoint!")
+					CSensor.Type.START -> {
+						player.sendMessage("${YELLOW}This is no longer the start position!")
+						course.setStartSensor(null)
+					}
+					CSensor.Type.FINISH -> {
+						player.sendMessage("${YELLOW}This is already the finish position!")
+						EventTracker.remove(player, true)
+						return
+					}
+					CSensor.Type.CHECKPOINT -> player.sendMessage("${YELLOW}This block is a checkpoint!")
 				}
-				EventTracker.remove(player, true)
-				return
 			}
 			// Update course start position and prompt message
 			course.setFinishSensor(block.location)

@@ -19,7 +19,7 @@ object CSetSpawn : ICommand {
 		if (args.isEmpty()) {
 			// Check if player has a course selected
 			course = SelectManager.get(player) ?: run {
-				ErrorMessenger.noCourseSelect(sender, this)
+				ErrorMessenger.noCourseSelect(sender)
 				return
 			}
 		}
