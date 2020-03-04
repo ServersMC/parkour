@@ -23,7 +23,10 @@ object CSelect : ICommand {
 				SelectManager.remove(player)
 				// Prompt message
 				player.sendMessage("${GREEN}Deselected course $GRAY${course.getName()}")
+				return
 			}
+			// Course not selected prompt
+			player.sendMessage("${RED}You are already deselected from a course.")
 			return
 		}
 		// Translate args to int
