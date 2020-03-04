@@ -21,7 +21,7 @@ object CSetStart : ICommand, ITrackedEvent {
 	
 	override fun execute(sender: CommandSender, args: MutableList<out String>) {
 		// Initialize variables
-		val player: Player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand("Please select a course, using course_id"))
+		val player: Player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand())
 		// Register player to EventTracker
 		registerPlayer(player)
 	}
