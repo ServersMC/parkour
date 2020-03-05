@@ -2,8 +2,11 @@ package org.serversmc.parkour.objects
 
 import org.bukkit.*
 import org.bukkit.configuration.*
+import org.bukkit.entity.*
+import org.serversmc.parkour.enums.*
+import org.serversmc.parkour.interfaces.*
 
-class CSensor {
+class CSensor : IHologram {
 	
 	companion object {
 		fun create(type: Type, location: Location): CSensor {
@@ -25,7 +28,10 @@ class CSensor {
 	}
 	
 	fun getType() = type
-	
 	fun getLocation() = location
+	
+	override var entity: ArmorStand? = null
+	override fun getHoloName(): String = "$BOLD$GRAY{$AQUA${type.name}$GRAY}"
+	override fun getHoloLocation(): Location = location.clone().add(0.5, 1.0, 0.5)
 	
 }

@@ -62,7 +62,7 @@ object CAddRegion : ICommand {
 			return
 		}
 		// Add to session and create region
-		val region = course.createRegion().apply {
+		val region = course.createRegion(player.world).apply {
 			session[player] = this
 		}
 		// Prompt messages

@@ -3,6 +3,7 @@ package org.serversmc.parkour.objects
 import org.bukkit.*
 import org.bukkit.configuration.file.*
 import org.bukkit.entity.*
+import org.serversmc.parkour.interfaces.*
 import org.serversmc.parkour.utils.*
 import java.io.*
 import java.util.*
@@ -108,14 +109,17 @@ class Course(private val file: File) {
 	
 	fun getRegion(index: Int) = regions[index]
 	
-	fun createRegion(): CRegion {
+	fun createRegion(world: World): CRegion {
 		return CRegion().apply {
+			setId(regions.size)
+			setWorld(world)
 			regions.add(this)
 		}
 	}
 	
 	fun removeRegion(region: CRegion) {
 		regions.remove(region)
+		region.hideHologram()
 	}
 	
 	/*************/
@@ -135,26 +139,28 @@ class Course(private val file: File) {
 	
 	fun setStartSensor(location: Location?) {
 		sensors.singleOrNull { it.getType() == CSensor.Type.START }?.apply {
+			this.hideHologram()
 			sensors.remove(this)
 		}
 		if (location == null) return
-		sensors.add(CSensor.create(CSensor.Type.START, location))
+		sensors.add(CSensor.create(CSensor.Type.START, location).apply { showHologram() })
 	}
 	
 	fun getCheckpoints() = sensors.filter { it.getType() == CSensor.Type.CHECKPOINT }
 	
 	fun addCheckpoint(location: Location) {
-		sensors.add(CSensor.create(CSensor.Type.CHECKPOINT, location))
+		sensors.add(CSensor.create(CSensor.Type.CHECKPOINT, location).apply { showHologram() })
 	}
 	
 	fun getFinishSensor() = sensors.singleOrNull { it.getType() == CSensor.Type.FINISH }
 	
 	fun setFinishSensor(location: Location?) {
 		sensors.singleOrNull { it.getType() == CSensor.Type.FINISH }?.apply {
+			hideHologram()
 			sensors.remove(this)
 		}
 		if (location == null) return
-		sensors.add(CSensor.create(CSensor.Type.FINISH, location))
+		sensors.add(CSensor.create(CSensor.Type.FINISH, location).apply { showHologram() })
 	}
 	
 	/***********************/
@@ -207,6 +213,16 @@ class Course(private val file: File) {
 	/** MODIFIERS **/
 	/***************/
 	
+	fun showHolograms() {
+		sensors.forEach { (it as IHologram).showHologram() }
+		regions.forEach { (it as IHologram).showHologram() }
+	}
+	
+	fun hideHolograms() {
+		sensors.forEach { (it as IHologram).hideHologram() }
+		regions.forEach { (it as IHologram).hideHologram() }
+	}
+	
 	fun save() {
 		// Initialize variables
 		val yaml = YamlConfiguration()
@@ -222,6 +238,7 @@ class Course(private val file: File) {
 		}
 		// Save Regions
 		regions.forEachIndexed { regionId, region ->
+			yaml.set("regions.$regionId.world", region.getWorld().uid.toString())
 			region.getBlocks().forEachIndexed { blockId, b ->
 				yaml.set("regions.$regionId.$blockId.loc", b.getLocation())
 				yaml.set("regions.$regionId.$blockId.data", b.getBlockData().getAsString(true))

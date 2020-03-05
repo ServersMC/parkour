@@ -9,10 +9,14 @@ object SelectManager {
 	
 	fun add(player: Player, course: Course) {
 		selected[player] = course
+		course.showHolograms()
 	}
 	
 	fun remove(player: Player) {
 		if (selected.containsKey(player)) {
+			if (get(selected[player]!!).size == 1) {
+				get(player)!!.hideHolograms()
+			}
 			selected.remove(player)
 		}
 	}
