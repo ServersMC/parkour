@@ -130,7 +130,7 @@ class CRegion : IHologram {
 	}
 	
 	override var entity: ArmorStand? = null
-	override fun getHoloName(): String = "$BOLD$GRAY-[$GOLD${id}$GRAY]-}"
+	override fun getHoloName(): String = "$BOLD$GRAY-[$GOLD${id}$GRAY]-"
 	override fun getHoloLocation(): Location = min.getMidpoint(max).setY(max.y + 0.5).toLocation(world)
 	
 }

@@ -20,6 +20,13 @@ object ErrorMessenger {
 	}
 	
 	/**
+	 * Region id $id not found!
+	 */
+	fun regionIdNotFound(sender: CommandSender, id: Int) {
+		sender.sendMessage("${RED}Region id '$GRAY$id$RED' not found!")
+	}
+	
+	/**
 	 * No course selected. Select a course using '/pk select'
 	 */
 	fun noCourseSelect(sender: CommandSender) {

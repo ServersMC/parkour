@@ -50,6 +50,7 @@ class Main : JavaPlugin() {
 		CAddRegion.register()
 		CCreate.register()
 		CDelete.register()
+		CDelRegion.register()
 		CHelp.register()
 		CInfo.register()
 		CList.register()

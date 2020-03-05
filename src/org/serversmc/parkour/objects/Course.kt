@@ -107,7 +107,7 @@ class Course(private val file: File) {
 	
 	fun getRegions() = regions
 	
-	fun getRegion(index: Int) = regions[index]
+	fun getRegion(index: Int) = regions.getOrNull(index)
 	
 	fun createRegion(world: World): CRegion {
 		return CRegion().apply {
