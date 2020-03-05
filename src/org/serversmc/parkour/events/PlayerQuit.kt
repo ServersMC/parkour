@@ -12,14 +12,6 @@ object PlayerQuit : Listener {
 		removePlayerFromListeners(event)
 	}
 	
-	private fun removePlayerFromListeners(event: PlayerQuitEvent) {
-		// Initialize variables
-		val player = event.player
-		// Remove player from all player tracking
-		SelectManager.remove(player)
-		EventTracker.remove(player, false)
-	}
-	
 	private fun removePlayerFromCourse(event: PlayerQuitEvent) {
 		// Initialize variables
 		val player = event.player
@@ -31,6 +23,14 @@ object PlayerQuit : Listener {
 		val spawn = course.getSpawn() ?: return
 		// Teleport player to spawn
 		player.teleport(spawn)
+	}
+	
+	private fun removePlayerFromListeners(event: PlayerQuitEvent) {
+		// Initialize variables
+		val player = event.player
+		// Remove player from all player tracking
+		SelectManager.remove(player)
+		EventTracker.remove(player, false)
 	}
 	
 }
