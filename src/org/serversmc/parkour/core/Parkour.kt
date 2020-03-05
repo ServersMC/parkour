@@ -20,9 +20,10 @@ class Main : JavaPlugin() {
 		registerCommands()
 		// Register Events
 		Bukkit.getPluginManager().apply {
-			registerEvents(SensorInteract, PLUGIN)
-			registerEvents(PlayerQuit, PLUGIN)
+			registerEvents(BlockBreak, PLUGIN)
 			registerEvents(PlayerMove, PLUGIN)
+			registerEvents(PlayerQuit, PLUGIN)
+			registerEvents(SensorInteract, PLUGIN)
 		}
 		// Load Courses
 		CourseManager.loadCourses()
