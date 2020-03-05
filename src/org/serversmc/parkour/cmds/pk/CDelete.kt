@@ -36,7 +36,9 @@ object CDelete : ICommand, ITrackedEvent {
 		when (event.message.toLowerCase()) {
 			"yes" -> {
 				player.sendMessage("${GREEN}Deleted ${WHITE}${course.getName()}${GREEN}!")
+				CourseManager.deleteCourse(EventTracker.getTracker(player)!!.course)
 				EventTracker.remove(player, false)
+				SelectManager.remove(player)
 			}
 			"no" -> {
 				EventTracker.remove(player, true)
