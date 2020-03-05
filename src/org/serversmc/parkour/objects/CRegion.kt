@@ -17,7 +17,7 @@ class CRegion {
 		// Load blocks
 		section.getKeys(false).forEach {
 			// Set region id
-			id = section.parent!!.name.toInt()
+			id = section.name.toInt()
 			// Check if section is valid
 			if (it == null) return@forEach
 			val yamlBlock = section.getConfigurationSection(it) ?: return@forEach
@@ -40,6 +40,12 @@ class CRegion {
 			setLocation(block.location)
 			setBlockData(block.blockData)
 		})
+		calculateBounds()
+	}
+	
+	fun removeBlock(block: Block) {
+		val cBlock = blocks.singleOrNull { it.getLocation() == block.location } ?: return
+		blocks.remove(cBlock)
 	}
 	
 	fun boundsContain(vector: Vector): Boolean {
@@ -59,13 +65,13 @@ class CRegion {
 			min.zero()
 			max.zero()
 			// Calculate min
-			val minX = minBy { it.x }!!.x - 0.5
-			val minY = minBy { it.y }!!.y + 0.5
-			val minZ = minBy { it.z }!!.z - 0.5
+			val minX = minBy { it.x }!!.x - 0.4
+			val minY = minBy { it.y }!!.y + 0.4
+			val minZ = minBy { it.z }!!.z - 0.4
 			// Calculate max
-			val maxX = maxBy { it.x }!!.x + 1.5
-			val maxY = maxBy { it.y }!!.y + 1.0
-			val maxZ = maxBy { it.z }!!.z + 1.5
+			val maxX = maxBy { it.x }!!.x + 1.4
+			val maxY = maxBy { it.y }!!.y + 1.4
+			val maxZ = maxBy { it.z }!!.z + 1.4
 			// Apply bounds
 			min.add(Vector(minX, minY, minZ))
 			max.add(Vector(maxX, maxY, maxZ))
@@ -74,18 +80,14 @@ class CRegion {
 	
 	fun show() {
 		visible = true
-		// Show blocks that are solid
-		blocks.filter { it.getBlockData().material.isSolid }.forEach { it.show() }
-		// Show blocks that are not solid
-		blocks.filterNot { it.getBlockData().material.isSolid }.forEach { it.show() }
+		// Show blocks
+		blocks.forEach { it.show() }
 	}
 	
 	fun hide() {
 		visible = false
-		// Show blocks that are not solid
-		blocks.filterNot { it.getBlockData().material.isSolid }.forEach { it.hide() }
-		// Show blocks that are solid
-		blocks.filter { it.getBlockData().material.isSolid }.forEach { it.hide() }
+		// Hide blocks
+		blocks.reversed().forEach { it.hide() }
 	}
 	
 }
