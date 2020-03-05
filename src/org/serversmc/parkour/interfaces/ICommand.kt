@@ -16,7 +16,7 @@ interface ICommand : CommandExecutor, TabCompleter, Listener {
 		
 		private val subCmds = HashMap<ICommand, ArrayList<ICommand>>()
 		
-		fun getSubCommands(cmd: ICommand) = subCmds[cmd] ?: ArrayList()
+		fun getSubCommands(cmd: ICommand) = subCmds[cmd] ?: ArrayList<ICommand>()
 		
 		fun addCommand(parent: ICommand, child: ICommand) {
 			subCmds[parent]?.apply {
