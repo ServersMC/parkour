@@ -31,7 +31,7 @@ class CSensor : IHologram {
 	fun getLocation() = location
 	
 	override var entity: ArmorStand? = null
-	override fun getHoloName(): String = "$BOLD$GRAY{$AQUA${type.name}$GRAY}"
+	override fun getHoloName(): String = "$BOLD$GRAY[$AQUA${type.name}$GRAY]"
 	override fun getHoloLocation(): Location = location.clone().add(0.5, 1.0, 0.5)
 	
 }
