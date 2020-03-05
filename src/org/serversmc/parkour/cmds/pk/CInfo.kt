@@ -27,16 +27,16 @@ object CInfo : ICommand {
 			val no = "${RED}false"
 			val yes = "${GREEN}true"
 			// Send messages
-			sender.sendMessage("$GRAY  id: ${GREEN}${getId()}")
-			sender.sendMessage("$GRAY  name: ${GREEN}${getName()}")
-			sender.sendMessage("$GRAY  isOpen: ${if (getMode() == Course.Mode.OPEN) yes else no}")
+			sender.sendMessage("$GRAY  id: $GREEN${getId()}")
+			sender.sendMessage("$GRAY  name: $GREEN${getName()}")
+			sender.sendMessage("$GRAY  isOpen: $AQUA${if (getMode() == Course.Mode.OPEN) "true" else "false"}")
 			sender.sendMessage("$GRAY  hasSpawn: ${if (getSpawn() == null) no else yes}")
 			sender.sendMessage("$GRAY  hasStart: ${if (getStartSensor() == null) no else yes}")
 			sender.sendMessage("$GRAY  hasFinish: ${if (getFinishSensor() == null) no else yes}")
 			sender.sendMessage("$GRAY  regions: ${if (getRegions().isEmpty()) RED else GREEN}${getRegions().size}")
 			sender.sendMessage("$GRAY  checkpoints: ${if (getCheckpoints().isEmpty()) YELLOW else GREEN}${getCheckpoints().size}")
-			sender.sendMessage("$GRAY  isReady: ${if (isReady()) yes else no}")
 			if (!isReady()) {
+				sender.sendMessage("$GRAY  isReady: $no")
 				sender.sendMessage("${YELLOW}To make course ready, fix items in red!")
 			}
 		}

@@ -22,6 +22,10 @@ interface IHologram {
 		}
 	}
 	
+	fun updateHoloName() {
+		entity?.customName = getHoloName()
+	}
+	
 	fun hideHologram() {
 		entity?.remove()
 		entity = null

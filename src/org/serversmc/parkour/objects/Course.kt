@@ -120,6 +120,10 @@ class Course(private val file: File) {
 	fun removeRegion(region: CRegion) {
 		regions.remove(region)
 		region.hideHologram()
+		regions.forEachIndexed { index, cRegion ->
+			cRegion.setId(index)
+			cRegion.updateHoloName()
+		}
 	}
 	
 	/*************/
@@ -206,7 +210,13 @@ class Course(private val file: File) {
 	fun getWins() = wins
 	
 	fun isReady(): Boolean {
-		return false
+		return when {
+			(getSpawn() == null) -> false
+			(getStartSensor() == null) -> false
+			(getFinishSensor() == null) -> false
+			(getRegions().isEmpty()) -> false
+			else -> true
+		}
 	}
 	
 	/***************/
