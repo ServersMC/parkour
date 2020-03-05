@@ -43,6 +43,11 @@ class CRegion {
 		calculateBounds()
 	}
 	
+	fun containsBlock(block: Block): Boolean {
+		blocks.singleOrNull { it.getLocation() == block.location } ?: return false
+		return true
+	}
+	
 	fun removeBlock(block: Block) {
 		val cBlock = blocks.singleOrNull { it.getLocation() == block.location } ?: return
 		blocks.remove(cBlock)
