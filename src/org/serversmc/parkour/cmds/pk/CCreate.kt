@@ -33,8 +33,9 @@ object CCreate : ICommand {
 		val course = CourseManager.createCourse(name)
 		course.setAuthor(player)
 		// Prompt creation
-		player.sendMessage("${GREEN}Created course ${GOLD}${course.getName()}${GREEN}!")
-		player.sendMessage("${GREEN}Finish course setup using: ${GOLD}/parkour info")
+		player.sendMessage("${AQUA}Created course ${GRAY}${course.getName()}${AQUA}!")
+		player.sendMessage("${AQUA}Finish course setup using: ${GRAY}/pk info")
+		SelectManager.add(player, course)
 	}
 	
 	override fun tabComplete(player: Player, args: MutableList<out String>): MutableList<String>? {
