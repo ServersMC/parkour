@@ -11,6 +11,8 @@ lateinit var PLUGIN: Main
 
 class Main : JavaPlugin() {
 	
+	// TODO - Remove any holos that were not deleted
+	
 	override fun onEnable() {
 		// Initialize libraries
 		PLUGIN = this
