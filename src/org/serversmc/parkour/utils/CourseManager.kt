@@ -52,6 +52,10 @@ object CourseManager {
 		} ?: dataFolder.mkdirs()
 	}
 	
+	fun updateHolograms() {
+		courses.forEach { it.updateHolograms() }
+	}
+	
 	fun saveAndClose() {
 		courses.forEach { course ->
 			val temp = course.getPlayers()

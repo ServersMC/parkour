@@ -9,14 +9,13 @@ object SelectManager {
 	
 	fun add(player: Player, course: Course) {
 		selected[player] = course
-		course.updateHolograms()
+		CourseManager.updateHolograms()
 	}
 	
 	fun remove(player: Player) {
 		if (!selected.containsKey(player)) return
-		val course = selected[player]!!
 		selected.remove(player)
-		course.updateHolograms()
+		CourseManager.updateHolograms()
 	}
 	
 	fun contains(player: Player) = selected.contains(player)
