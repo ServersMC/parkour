@@ -30,7 +30,6 @@ object CourseManager {
 	
 	fun deleteCourse(course: Course) {
 		course.delete()
-		course.hideHolograms()
 		courses.remove(course)
 	}
 	
@@ -66,7 +65,6 @@ object CourseManager {
 			}
 			course.show()
 			course.save()
-			course.hideHolograms()
 		}
 		courses.clear()
 	}

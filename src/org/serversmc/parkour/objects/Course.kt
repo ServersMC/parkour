@@ -228,14 +228,23 @@ class Course(private val file: File) {
 	/** MODIFIERS **/
 	/***************/
 	
-	fun showHolograms() {
+	private fun showHolograms() {
 		sensors.forEach { (it as IHologram).showHologram() }
 		regions.forEach { (it as IHologram).showHologram() }
 	}
 	
-	fun hideHolograms() {
+	private fun hideHolograms() {
 		sensors.forEach { (it as IHologram).hideHologram() }
 		regions.forEach { (it as IHologram).hideHologram() }
+	}
+	
+	fun updateHolograms() {
+		if (SelectManager.contains(this)) {
+			showHolograms()
+		}
+		else {
+			hideHolograms()
+		}
 	}
 	
 	fun save() {
@@ -261,10 +270,12 @@ class Course(private val file: File) {
 		}
 		// Save file
 		yaml.save(file)
+		hideHolograms()
 	}
 	
 	fun delete() {
 		file.delete()
+		hideHolograms()
 	}
 	
 	fun show() {

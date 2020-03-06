@@ -19,8 +19,8 @@ object CAddRegion : ICommand, ITrackedEvent {
 	
 	// TODO - Add cave regions
 	
-	override fun getStart(): String = " ${GRAY}[${AQUA}Started region editor${GRAY}]"
-	override fun getCanceled(): String = "${AQUA}Finished region editor"
+	override fun getStart(): String = "${GRAY}[${AQUA}Started region editor${GRAY}]"
+	override fun getCanceled(): String = "${GRAY}[${AQUA}Finished region editor${GRAY}]"
 	override fun getInUse(): String? = null
 	
 	private val session = HashMap<Player, CRegion>()
@@ -31,7 +31,7 @@ object CAddRegion : ICommand, ITrackedEvent {
 		// Creates new region
 		val region = course.createRegion(player.world)
 		// Prompt Messages
-		player.sendMessage(" ${YELLOW}Created region number ${GRAY}${region.getId()}")
+		player.sendMessage(" ${YELLOW}Created region id: ${GRAY}${region.getId()}")
 		player.sendMessage(" ${AQUA}Breaking a block will remove the block from region")
 		player.sendMessage(" ${AQUA}Placing a block will add the block to the region")
 		player.sendMessage(" ${GRAY}${getUsage()} test ${AQUA}will flash the region")
@@ -62,13 +62,10 @@ object CAddRegion : ICommand, ITrackedEvent {
 	override fun execute(sender: CommandSender, args: MutableList<out String>) {
 		// Initialize variables
 		val player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand())
-		// Register tracked event
-		registerTrackedEvent(player)
-		
-		// Check if player is already in session
-		if (session.contains(player)) {
-			// Check if subcommand test was called
-			if (args.isNotEmpty() && args[0].equals("test", true)) {
+		// Check if args are empty
+		if (args.isNotEmpty()) {
+			// Check if player called test subcommand
+			if (args[0].equals("test", true)) {
 				// Check if region is empty
 				if (session[player]!!.getBlocks().isEmpty()) {
 					player.sendMessage("${AQUA}Nothing to test!")
@@ -83,10 +80,10 @@ object CAddRegion : ICommand, ITrackedEvent {
 				}, 20L)
 				return
 			}
-			// Remove player from session
-			session.remove(player)
-			return
 		}
+		// If test command was not called
+		// Register player to TrackedEvent
+		registerTrackedEvent(player)
 	}
 	
 	@EventHandler

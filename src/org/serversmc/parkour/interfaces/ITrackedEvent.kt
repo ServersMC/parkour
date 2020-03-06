@@ -19,14 +19,14 @@ interface ITrackedEvent {
 		}
 		// Check if player is in another tracked event
 		if (EventTracker.containsPlayer(player)) {
-			// Remove player from tracked event
-			EventTracker.remove(player, true)
 			// Check if player is using this command
 			if (EventTracker.getEvent(player)!! == this) {
-				// Stop register
-				//   This prevents a re-register of the same command
+				// This prevents a re-register of the same command
+				EventTracker.remove(player, true)
 				return
 			}
+			// Remove player from tracked event
+			EventTracker.remove(player, true)
 		}
 		// Check if command is a singular use only
 		if (getInUse() != null) {

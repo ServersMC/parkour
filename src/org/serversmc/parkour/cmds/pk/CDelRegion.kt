@@ -35,7 +35,7 @@ object CDelRegion : ICommand {
 		// Remove region
 		course.removeRegion(region)
 		// Prompt message
-		sender.sendMessage("${AQUA}Deleted region id: $GRAY$id${AQUA}!")
+		sender.sendMessage("${AQUA}Deleted region id: $GRAY$id")
 	}
 	
 	override fun tabComplete(player: Player, args: MutableList<out String>): MutableList<String>? = ArrayList()

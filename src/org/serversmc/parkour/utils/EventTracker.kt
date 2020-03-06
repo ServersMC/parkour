@@ -12,6 +12,9 @@ object EventTracker {
 	fun add(player: Player, event: ITrackedEvent) {
 		players[player] = event
 		event.onAdd(player)
+		if (event.getInUse() == null) {
+			return
+		}
 		Bukkit.getScheduler().scheduleSyncDelayedTask(PLUGIN, {
 			remove(player, true)
 		}, 300L)
@@ -19,10 +22,10 @@ object EventTracker {
 	
 	fun remove(player: Player, cancelled: Boolean) {
 		val tracker = getEvent(player) ?: return
+		tracker.onRemove(player, cancelled)
 		if (cancelled) {
 			player.sendMessage(tracker.getCanceled())
 		}
-		tracker.onRemove(player, cancelled)
 		players.remove(player)
 	}
 	
