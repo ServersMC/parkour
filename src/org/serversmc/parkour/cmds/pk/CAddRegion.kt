@@ -105,7 +105,6 @@ object CAddRegion : ICommand, ITrackedEvent {
 		}
 		// Remove block from region if has any
 		region.removeBlock(event.block)
-		player.sendMessage("${RED}Removed!")
 		// Check if attached blocks disappeared
 		Bukkit.getScheduler().scheduleSyncDelayedTask(PLUGIN) {
 			// Temp deletion block to fix ConcurrentModificationException
@@ -144,7 +143,6 @@ object CAddRegion : ICommand, ITrackedEvent {
 		}
 		// Add block from region
 		region.addBlock(event.block)
-		player.sendMessage("${AQUA}Added!")
 	}
 	
 	override fun tabComplete(player: Player, args: MutableList<out String>): MutableList<String>? = ArrayList()
