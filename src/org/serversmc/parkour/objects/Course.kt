@@ -5,6 +5,7 @@ import org.bukkit.configuration.file.*
 import org.bukkit.entity.*
 import org.serversmc.parkour.interfaces.*
 import org.serversmc.parkour.utils.*
+import org.serversmc.parkour.utils.Console
 import java.io.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -63,6 +64,13 @@ class Course(private val file: File) {
 		else {
 			// Create new data file
 			file.createNewFile()
+		}
+		// Validate if course isReady
+		if (mode == Mode.OPEN) {
+			if (!isReady()) {
+				Console.warn("Course: \"$name\" loaded as open, but does not qualify as ready.")
+				mode = Mode.CLOSED
+			}
 		}
 	}
 	
