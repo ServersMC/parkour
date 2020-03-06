@@ -90,7 +90,12 @@ class CRegion : IHologram {
 		// Run calculation
 		ArrayList<Vector>().apply {
 			// Convert locations to vector and add to list
-			blocks.forEach { add(it.getLocation().toVector()) }
+			blocks.filter {
+				it.getBlockData().material.isSolid &&
+					!it.getBlockData().material.name.endsWith("_PLATE", true)
+			}.forEach {
+				add(it.getLocation().toVector())
+			}
 			// Zero out vectors
 			min.zero()
 			max.zero()

@@ -14,7 +14,7 @@ object BlockBreak : Listener {
 		// Initialize Player
 		val player = event.player
 		// Check if block is part of a course
-		CourseManager.getCourses().filterNot { it == SelectManager.get(player) }.forEach { course ->
+		CourseManager.getCourses().forEach { course ->
 			course.getSensor(event.block.location)?.run {
 				player.sendMessage("${RED}This block is part of a course!")
 				event.isCancelled = true

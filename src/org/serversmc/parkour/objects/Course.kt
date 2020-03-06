@@ -27,7 +27,7 @@ class Course(private val file: File) {
 	private var wins = 0
 	
 	private lateinit var author: UUID
-	private var spawn: Location? = null
+	private val spawn: CSpawn = CSpawn()
 	private var name = file.nameWithoutExtension
 	private var mode = Mode.CLOSED
 	
@@ -38,7 +38,7 @@ class Course(private val file: File) {
 			val yaml = YamlConfiguration.loadConfiguration(file)
 			// Initialize attributes
 			name = yaml.getString("name")!!
-			spawn = yaml.get("spawn") as? Location
+			spawn.setLocation(yaml.get("spawn") as? Location)
 			mode = Mode.valueOf(yaml.getString("mode")!!)
 			author = UUID.fromString(yaml.getString("author")!!)
 			// Try to load sensors
@@ -175,7 +175,7 @@ class Course(private val file: File) {
 	
 	fun getViewDistance() = viewDistance
 	
-	fun getSpawn() = spawn
+	fun getSpawn() = spawn.getLocation()
 	
 	fun setSpawn(location: Location) {
 		val tempLocation = location.clone()
@@ -184,7 +184,8 @@ class Course(private val file: File) {
 		tempLocation.z = location.blockZ + 0.5
 		tempLocation.pitch = ((location.pitch / 15).roundToInt() * 15f)
 		tempLocation.yaw = (location.yaw / 15).roundToInt() * 15f
-		spawn = tempLocation.clone()
+		spawn.setLocation(tempLocation.clone())
+		updateHolograms()
 	}
 	
 	fun getName() = name
@@ -231,11 +232,13 @@ class Course(private val file: File) {
 	private fun showHolograms() {
 		sensors.forEach { (it as IHologram).showHologram() }
 		regions.forEach { (it as IHologram).showHologram() }
+		spawn.showHologram()
 	}
 	
 	private fun hideHolograms() {
 		sensors.forEach { (it as IHologram).hideHologram() }
 		regions.forEach { (it as IHologram).hideHologram() }
+		spawn.hideHologram()
 	}
 	
 	fun updateHolograms() {
@@ -252,7 +255,7 @@ class Course(private val file: File) {
 		val yaml = YamlConfiguration()
 		// Add course attributes
 		yaml.set("name", name)
-		yaml.set("spawn", spawn)
+		yaml.set("spawn", spawn.getLocation())
 		yaml.set("mode", mode.name)
 		yaml.set("author", author.toString())
 		// Save Sensors
