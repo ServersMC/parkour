@@ -40,8 +40,9 @@ object CDelete : ICommand, ITrackedEvent {
 			"yes" -> {
 				player.sendMessage("${GREEN}Deleted ${WHITE}${course.getName()}${GREEN}!")
 				CourseManager.deleteCourse(course)
-				EventTracker.remove(player, false)
-				SelectManager.remove(player)
+				SelectManager.get(course).forEach {
+					SelectManager.remove(it)
+				}
 			}
 			"no" -> {
 				EventTracker.remove(player, true)
