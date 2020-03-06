@@ -20,7 +20,7 @@ object PlayerQuit : Listener {
 		// Remove player from game
 		course.removePlayer(player)
 		// Try to get spawn
-		val spawn = course.getSpawn() ?: return
+		val spawn = course.getSpawn()
 		// Teleport player to spawn
 		player.teleport(spawn)
 	}
@@ -28,10 +28,6 @@ object PlayerQuit : Listener {
 	private fun removePlayerFromListeners(event: PlayerQuitEvent) {
 		// Initialize variables
 		val player = event.player
-		// Remove player from tracking manager
-		//   This will run the onRemove() function in the
-		//   ITrackedEvent sub classes
-		EventTracker.remove(player, false)
 		// Remove player from SelectManager
 		SelectManager.remove(player)
 	}

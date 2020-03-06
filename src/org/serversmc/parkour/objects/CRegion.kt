@@ -5,6 +5,7 @@ import org.bukkit.block.*
 import org.bukkit.configuration.*
 import org.bukkit.entity.*
 import org.bukkit.util.Vector
+import org.serversmc.parkour.core.*
 import org.serversmc.parkour.enums.*
 import org.serversmc.parkour.interfaces.*
 import java.util.*
@@ -123,15 +124,19 @@ class CRegion : IHologram {
 	}
 	
 	fun show() {
-		visible = true
-		// Show blocks
-		blocks.forEach { it.show() }
+		if (visible) return
+		Bukkit.getScheduler().callSyncMethod(PLUGIN) {
+			visible = true
+			blocks.forEach { it.show() }
+		}
 	}
 	
 	fun hide() {
-		visible = false
-		// Hide blocks
-		blocks.reversed().forEach { it.hide() }
+		if (!visible) return
+		Bukkit.getScheduler().callSyncMethod(PLUGIN) {
+			visible = false
+			blocks.reversed().forEach { it.hide() }
+		}
 	}
 	
 	override var entity: ArmorStand? = null

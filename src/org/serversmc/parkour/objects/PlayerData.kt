@@ -3,7 +3,7 @@ package org.serversmc.parkour.objects
 class PlayerData {
 	
 	private var checkpoint: CSensor? = null
-	private var position = 0
+	private var position = -1
 	private var timeStarted = 0L
 	
 	fun getCheckpoint() = checkpoint

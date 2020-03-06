@@ -8,12 +8,14 @@ object SelectManager {
 	private val selected = HashMap<Player, Course>()
 	
 	fun add(player: Player, course: Course) {
+		EventTracker.remove(player, true)
 		selected[player] = course
 		CourseManager.updateHolograms()
 	}
 	
 	fun remove(player: Player) {
 		if (!selected.containsKey(player)) return
+		EventTracker.remove(player, true)
 		selected.remove(player)
 		CourseManager.updateHolograms()
 	}

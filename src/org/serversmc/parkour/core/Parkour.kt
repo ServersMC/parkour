@@ -7,6 +7,7 @@ import org.serversmc.parkour.cmds.pk.*
 import org.serversmc.parkour.events.*
 import org.serversmc.parkour.utils.*
 
+
 lateinit var PLUGIN: Main
 
 class Main : JavaPlugin() {

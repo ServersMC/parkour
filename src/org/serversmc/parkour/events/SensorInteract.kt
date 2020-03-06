@@ -37,7 +37,7 @@ object SensorInteract : Listener {
 			return
 		}
 		// Give instructions
-		TitleAPI.sendTitle(player, 5, 1000, 5, "${YELLOW}Jump to next block", "${YELLOW}to begin")
+		TitleAPI.sendTitle(player, 5, 99999, 5, "${YELLOW}Jump to next block", "${YELLOW}to begin")
 		// Add player to course
 		course.addPlayer(player)
 	}
@@ -49,10 +49,8 @@ object SensorInteract : Listener {
 		TitleAPI.sendTitle(player, 5, 30, 5, "${GREEN}You have finished", "${GRAY}Congrats!")
 		// Remove player from game
 		course.removePlayer(player)
-		// Try to get spawn location
-		val spawn = course.getSpawn() ?: return
 		// Teleport player to spawn
-		player.teleport(spawn)
+		player.teleport(course.getSpawn()!!)
 	}
 	
 	private fun playerHitCheckpoint(player: Player, course: Course, sensor: CSensor) {

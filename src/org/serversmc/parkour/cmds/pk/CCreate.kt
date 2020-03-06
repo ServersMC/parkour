@@ -36,8 +36,6 @@ object CCreate : ICommand {
 		player.sendMessage("${AQUA}Created course ${GRAY}${course.getName()}${AQUA}!")
 		player.sendMessage("${AQUA}Finish course setup using: ${GRAY}/pk info")
 		SelectManager.add(player, course)
-		// Remove player from tracked event if needed
-		EventTracker.remove(player, true)
 	}
 	
 	override fun tabComplete(player: Player, args: MutableList<out String>): MutableList<String>? {

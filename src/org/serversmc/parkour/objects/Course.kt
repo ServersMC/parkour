@@ -72,6 +72,9 @@ class Course(private val file: File) {
 				mode = Mode.CLOSED
 			}
 		}
+		// Show / Hide depending on mode
+		if (mode == Mode.OPEN) hide()
+		else show()
 	}
 	
 	/*************/
@@ -88,10 +91,12 @@ class Course(private val file: File) {
 	
 	fun addPlayer(player: Player) {
 		players[player] = PlayerData()
+		updateVisibility()
 	}
 	
 	fun removePlayer(player: Player) {
 		players.remove(player)
+		updateVisibility()
 	}
 	
 	fun hasPlayer(player: Player) = players.containsKey(player)
@@ -100,7 +105,7 @@ class Course(private val file: File) {
 	
 	fun setPlayerPos(player: Player, id: Int) {
 		players[player]!!.setPosition(id)
-		// TODO - Update visibility
+		updateVisibility()
 	}
 	
 	fun getPlayerCheckpoint(player: Player) = players[player]!!.getCheckpoint()
@@ -183,7 +188,7 @@ class Course(private val file: File) {
 	
 	fun getViewDistance() = viewDistance
 	
-	fun getSpawn() = spawn.getLocation()
+	fun getSpawn() = spawn.getLocation()!!
 	
 	fun setSpawn(location: Location) {
 		val tempLocation = location.clone()
@@ -205,7 +210,12 @@ class Course(private val file: File) {
 	fun getMode() = mode
 	
 	fun setOpen() {
+		// Update mode
 		mode = Mode.OPEN
+		// Remove all players from SelectManager
+		SelectManager.get(this).forEach {
+			SelectManager.remove(it)
+		}
 	}
 	
 	fun setClosed() {
@@ -230,10 +240,10 @@ class Course(private val file: File) {
 	
 	fun isReady(): Boolean {
 		return when {
-			(getSpawn() == null) -> false
+			(spawn.getLocation() == null) -> false
 			(getStartSensor() == null) -> false
 			(getFinishSensor() == null) -> false
-			(getRegions().isEmpty()) -> false
+			(regions.isEmpty()) -> false
 			else -> true
 		}
 	}
@@ -260,6 +270,17 @@ class Course(private val file: File) {
 		}
 		else {
 			hideHolograms()
+		}
+	}
+	
+	private fun updateVisibility() {
+		val show = ArrayList<Int>()
+		players.values.forEach {
+			for (i in 0..viewDistance) show.add(it.getPosition() + i)
+		}
+		regions.forEach {
+			if (show.contains(it.getId())) it.show()
+			else it.hide()
 		}
 	}
 	
