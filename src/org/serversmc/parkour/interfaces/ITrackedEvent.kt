@@ -13,7 +13,7 @@ interface ITrackedEvent {
 	
 	fun registerTrackedEvent(player: Player) {
 		// Check if player selected a course
-		if (SelectManager.contains(player)) {
+		if (!SelectManager.contains(player)) {
 			ErrorMessenger.noCourseSelect(player)
 			return
 		}
