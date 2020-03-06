@@ -42,7 +42,7 @@ object CDelRegion : ICommand {
 	override fun getLabel(): String = "DELREGION"
 	override fun getPermString(): String = "parkour.delregion"
 	override fun getPermDefault(): PermissionDefault = OP
-	override fun getUsage(): String = "/pl delregion [id]"
+	override fun getUsage(): String = "/pk delregion [id]"
 	override fun getDescription(): String = "Deletes a region from a course"
 	override fun hasListener(): Boolean = false
 	override fun getSubCmd(): ICommand? = CParkour
