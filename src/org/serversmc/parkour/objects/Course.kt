@@ -11,7 +11,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.math.*
-
 class Course(private val file: File) {
 	
 	enum class Mode {
@@ -210,12 +209,11 @@ class Course(private val file: File) {
 	fun getMode() = mode
 	
 	fun setOpen() {
-		// Update mode
 		mode = Mode.OPEN
-		// Remove all players from SelectManager
 		SelectManager.get(this).forEach {
 			SelectManager.remove(it)
 		}
+		hide()
 	}
 	
 	fun isOpen() = (mode == Mode.OPEN)
@@ -223,6 +221,7 @@ class Course(private val file: File) {
 	fun setClosed() {
 		mode = Mode.CLOSED
 		// TODO - Kick existing players
+		show()
 	}
 	
 	fun getAuthor() = author
@@ -330,3 +329,4 @@ class Course(private val file: File) {
 	}
 	
 }
+
