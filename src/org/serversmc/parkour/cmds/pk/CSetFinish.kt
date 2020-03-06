@@ -32,7 +32,7 @@ object CSetFinish : ICommand, ITrackedEvent {
 	@Suppress("warnings")
 	fun onPlayerInteract(event: PlayerInteractEvent) {
 		// Check if event is valid
-		if (!CDelete.isEventValid(event.player)) return
+		if (!isEventValid(event.player)) return
 		// Cancel event
 		event.isCancelled = true
 		// Initialize Variables
