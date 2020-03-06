@@ -204,8 +204,13 @@ class Course(private val file: File) {
 	
 	fun getMode() = mode
 	
-	fun setMode(mode: Mode) {
-		this.mode = mode
+	fun setOpen() {
+		mode = Mode.OPEN
+	}
+	
+	fun setClosed() {
+		mode = Mode.CLOSED
+		// TODO - Kick existing players
 	}
 	
 	fun getAuthor() = author
