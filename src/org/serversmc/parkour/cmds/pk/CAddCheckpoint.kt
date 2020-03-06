@@ -11,6 +11,8 @@ import org.serversmc.parkour.interfaces.*
 
 object CAddCheckpoint : ICommand, ITrackedEvent {
 	
+	// TODO - FINISH COMMAND
+	
 	override fun getStart() = "${AQUA}Place or click on a pressure plate to create checkpoint"
 	override fun getCanceled() = "${RED}Canceled checkpoint creation"
 	override fun getInUse(): String? = null
