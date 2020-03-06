@@ -17,6 +17,10 @@ interface ITrackedEvent {
 			ErrorMessenger.noCourseSelect(player)
 			return
 		}
+		// Check if course is open
+		if (SelectManager.get(player)!!.isOpen()) {
+			ErrorMessenger.cannotEditOpenCourse(player)
+		}
 		// Check if player is in another tracked event
 		if (EventTracker.containsPlayer(player)) {
 			// Check if player is using this command

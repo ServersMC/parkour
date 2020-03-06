@@ -33,4 +33,13 @@ object ErrorMessenger {
 		sender.sendMessage("${RED}No course selected. Select a course using '$GRAY/pk select$RED'")
 	}
 	
+	/**
+	 * Cannot edit an open course! Please close it before editing.
+	 * Use /pk close to close course.
+	 */
+	fun cannotEditOpenCourse(sender: CommandSender) {
+		sender.sendMessage("${RED}Cannot edit an open course! Please close it before editing.")
+		sender.sendMessage("${RED}Use ${GRAY}/pk close ${RED}to close course")
+	}
+	
 }
