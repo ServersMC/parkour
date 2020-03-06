@@ -4,7 +4,6 @@ import org.bukkit.command.*
 import org.bukkit.entity.*
 import org.bukkit.permissions.*
 import org.serversmc.parkour.cmds.*
-import org.serversmc.parkour.enums.*
 import org.serversmc.parkour.interfaces.*
 import org.serversmc.parkour.utils.*
 
@@ -15,18 +14,7 @@ object CSelect : ICommand {
 		val player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand())
 		// Check argument length
 		if (args.isEmpty()) {
-			// Check if player selected a course
-			if (SelectManager.contains(player)) {
-				// Get course selected
-				val course = SelectManager.get(player)!!
-				// Deselect player
-				SelectManager.remove(player)
-				// Prompt message
-				player.sendMessage("${GREEN}Deselected course $GRAY${course.getName()}")
-				return
-			}
-			// Course not selected prompt
-			player.sendMessage("${RED}You are already deselected from a course.")
+			SelectManager.remove(player)
 			return
 		}
 		// Translate args to int
@@ -41,8 +29,6 @@ object CSelect : ICommand {
 		}
 		// Select course to player
 		SelectManager.add(player, course)
-		// Prompt message
-		player.sendMessage("${GREEN}Editing course $GRAY${course.getName()}")
 	}
 	
 	override fun tabComplete(player: Player, args: MutableList<out String>): MutableList<String>? = ArrayList()
