@@ -209,6 +209,11 @@ class Course(private val file: File) {
 	
 	fun getWins() = wins
 	
+	fun getAveragePlayTime(): Long {
+		// TODO - Return average time it takes to complete
+		return 0
+	}
+	
 	fun isReady(): Boolean {
 		return when {
 			(getSpawn() == null) -> false
