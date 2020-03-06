@@ -15,19 +15,56 @@ import org.serversmc.parkour.interfaces.*
 import org.serversmc.parkour.objects.*
 import org.serversmc.parkour.utils.*
 
-object CAddRegion : ICommand {
+object CAddRegion : ICommand, ITrackedEvent {
 	
 	// TODO - Add cave regions
 	
+	override fun getStart(): String = " ${GRAY}[${AQUA}Started region editor${GRAY}]"
+	override fun getCanceled(): String = "${AQUA}Finished region editor"
+	override fun getInUse(): String? = null
+	
 	private val session = HashMap<Player, CRegion>()
+	
+	override fun onAdd(player: Player) {
+		// Initialize course variable
+		val course = SelectManager.get(player)!!
+		// Creates new region
+		val region = course.createRegion(player.world)
+		// Prompt Messages
+		player.sendMessage(" ${YELLOW}Created region number ${GRAY}${region.getId()}")
+		player.sendMessage(" ${AQUA}Breaking a block will remove the block from region")
+		player.sendMessage(" ${AQUA}Placing a block will add the block to the region")
+		player.sendMessage(" ${GRAY}${getUsage()} test ${AQUA}will flash the region")
+		player.sendMessage(" ${GRAY}${getUsage()} ${AQUA}will save and close the editor")
+		// Add player to session
+		session[player] = region
+	}
+	
+	override fun onRemove(player: Player, isCancelled: Boolean) {
+		// Initialize variables
+		val course = SelectManager.get(player)!!
+		val region = session[player]!!
+		// Check if region is empty
+		if (region.getBlocks().isEmpty()) {
+			// Prompt message
+			player.sendMessage("${YELLOW}Deleted region, no blocks in region!")
+			// Delete blank region from course
+			course.removeRegion(region)
+		}
+		else {
+			// Prompt message
+			player.sendMessage("${GREEN}Saved region id: ${GRAY}${region.getId()}")
+		}
+		// Remove player from session
+		session.remove(player)
+	}
 	
 	override fun execute(sender: CommandSender, args: MutableList<out String>) {
 		// Initialize variables
 		val player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand())
-		val course = SelectManager.get(player) ?: run {
-			ErrorMessenger.noCourseSelect(sender)
-			return
-		}
+		// Register tracked event
+		registerTrackedEvent(player)
+		
 		// Check if player is already in session
 		if (session.contains(player)) {
 			// Check if subcommand test was called
@@ -46,31 +83,10 @@ object CAddRegion : ICommand {
 				}, 20L)
 				return
 			}
-			// Check if region is empty
-			if (session[player]!!.getBlocks().isEmpty()) {
-				// Prompt message
-				player.sendMessage("${YELLOW}Canceled region, no blocks in region!")
-				// Delete blank region from course
-				course.removeRegion(session[player]!!)
-			}
-			else {
-				// Prompt message
-				player.sendMessage("${AQUA}Finished region editor")
-			}
 			// Remove player from session
 			session.remove(player)
 			return
 		}
-		// Add to session and create region
-		val region = course.createRegion(player.world).apply {
-			session[player] = this
-		}
-		// Prompt messages
-		player.sendMessage("${YELLOW}Create region number ${GRAY}${region.getId()}")
-		player.sendMessage("${AQUA}Breaking a block will remove the block from region")
-		player.sendMessage("${AQUA}Placing a block will add the block to the region")
-		player.sendMessage("${GRAY}${getUsage()} test ${AQUA}will flash the region")
-		player.sendMessage("${GRAY}${getUsage()} ${AQUA}will save and close the editor")
 	}
 	
 	@EventHandler

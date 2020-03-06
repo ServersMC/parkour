@@ -4,47 +4,35 @@ import org.bukkit.*
 import org.bukkit.entity.*
 import org.serversmc.parkour.core.*
 import org.serversmc.parkour.interfaces.*
-import org.serversmc.parkour.objects.*
 
 object EventTracker {
 	
-	// TODO - Add a timeout listener
+	private val players = HashMap<Player, ITrackedEvent>()
 	
-	data class Tracker(val player: Player, val event: ITrackedEvent, val course: Course) {
-		
-		private val taskId: Int = Bukkit.getScheduler().scheduleSyncDelayedTask(PLUGIN, {
+	fun add(player: Player, event: ITrackedEvent) {
+		players[player] = event
+		event.onAdd(player)
+		Bukkit.getScheduler().scheduleSyncDelayedTask(PLUGIN, {
 			remove(player, true)
 		}, 300L)
-		
-		fun cancelTimeout() {
-			Bukkit.getScheduler().cancelTask(taskId)
-		}
-		
-	}
-	
-	private val players = ArrayList<Tracker>()
-	
-	fun add(player: Player, event: ITrackedEvent, course: Course) {
-		players.add(Tracker(player, event, course))
-		player.sendMessage(event.start)
 	}
 	
 	fun remove(player: Player, cancelled: Boolean) {
-		val tracker = getTracker(player) ?: return
+		val tracker = getEvent(player) ?: return
 		if (cancelled) {
-			player.sendMessage(tracker.event.canceled)
+			player.sendMessage(tracker.getCanceled())
 		}
-		tracker.cancelTimeout()
-		players.remove(tracker)
+		tracker.onRemove(player, cancelled)
+		players.remove(player)
 	}
 	
-	fun containsPlayer(player: Player) = getTracker(player) != null
+	fun containsPlayer(player: Player) = players.contains(player)
 	
-	fun containsTracker(event: ITrackedEvent) = getPlayer(event) != null
+	fun containsEvent(event: ITrackedEvent) = players.containsValue(event)
 	
-	fun getPlayer(event: ITrackedEvent) = players.singleOrNull { it.event == event }?.player
+	fun getEvent(player: Player) = players[player]
 	
-	fun getTracker(player: Player) = players.singleOrNull { it.player == player }
+	fun getPlayers(event: ITrackedEvent) = players.filterValues { it == event }
 	
 	fun clear() {
 		players.clear()

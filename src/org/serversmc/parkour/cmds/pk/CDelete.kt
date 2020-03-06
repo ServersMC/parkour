@@ -12,31 +12,34 @@ import org.serversmc.parkour.utils.*
 
 object CDelete : ICommand, ITrackedEvent {
 	
-	override val start: String get() = "${YELLOW}Are you sure you want to delete this course? Type ${GRAY}yes ${YELLOW}or ${GRAY}no"
-	override val canceled: String get() = "${RED}Canceled course deletion"
-	override val inUse: String get() = "${GRAY}${EventTracker.getPlayer(this)!!.name} ${RED}is already using this command!"
+	override fun getStart(): String = "${YELLOW}Are you sure you want to delete this course? Type ${GRAY}yes ${YELLOW}or ${GRAY}no"
+	override fun getCanceled(): String = "${RED}Canceled course deletion"
+	override fun getInUse(): String? = "${GRAY}${EventTracker.getPlayers(this).keys.first().name} ${RED}is already using this command!"
+	override fun onAdd(player: Player) = Unit
+	override fun onRemove(player: Player, isCancelled: Boolean) = Unit
 	
 	override fun execute(sender: CommandSender, args: MutableList<out String>) {
 		// Initialize player
 		val player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand())
 		// Register player
-		registerPlayer(player)
+		registerTrackedEvent(player)
 	}
 	
 	@EventHandler
+	@Suppress("warnings")
 	fun onPlayerChat(event: AsyncPlayerChatEvent) {
-		// Check if player is in tracked list
-		if (!EventTracker.containsPlayer(event.player)) return
+		// Check if event is valid
+		if (!isEventValid(event.player)) return
 		// Initialize variables
 		val player = event.player
-		val course = EventTracker.getTracker(player)!!.course
+		val course = SelectManager.get(player)!!
 		// Cancel player chat
 		event.isCancelled = true
 		// Switch message case
 		when (event.message.toLowerCase()) {
 			"yes" -> {
 				player.sendMessage("${GREEN}Deleted ${WHITE}${course.getName()}${GREEN}!")
-				CourseManager.deleteCourse(EventTracker.getTracker(player)!!.course)
+				CourseManager.deleteCourse(course)
 				EventTracker.remove(player, false)
 				SelectManager.remove(player)
 			}

@@ -19,6 +19,10 @@ object CSelect : ICommand {
 			if (SelectManager.contains(player)) {
 				// Get course selected
 				val course = SelectManager.get(player)!!
+				// Remove player from any tracker if needed
+				//   This will run the onRemove() function in the
+				//   ITrackedEvent sub classes
+				EventTracker.remove(player, true)
 				// Deselect player
 				SelectManager.remove(player)
 				// Prompt message

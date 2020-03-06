@@ -15,25 +15,24 @@ import org.serversmc.parkour.utils.*
 
 object CSetFinish : ICommand, ITrackedEvent {
 	
-	
-	override val start: String get() = "${GREEN}Click on a pressure plate to select new finish position"
-	override val canceled: String get() = "${RED}Canceled finish position set"
-	override val inUse: String get() = "$GRAY${EventTracker.getPlayer(this)!!.name} ${RED}is already setting a finish position!"
+	override fun getStart(): String = "${GREEN}Click on a pressure plate to select new finish position"
+	override fun getCanceled(): String = "${RED}Canceled finish position set"
+	override fun getInUse(): String? = "$GRAY${EventTracker.getPlayers(this).keys.first().name} ${RED}is already setting a finish position!"
+	override fun onAdd(player: Player) = Unit
+	override fun onRemove(player: Player, isCancelled: Boolean) = Unit
 	
 	override fun execute(sender: CommandSender, args: MutableList<out String>) {
 		// Initialize variables
 		val player: Player = sender as? Player ?: throw(ICommand.PlayerOnlyCommand())
 		// Register player to EventTracker
-		registerPlayer(player)
+		registerTrackedEvent(player)
 	}
 	
 	@EventHandler
 	@Suppress("warnings")
 	fun onPlayerInteract(event: PlayerInteractEvent) {
-		// Check if player is in tracker
-		if (!EventTracker.containsPlayer(event.player)) return
-		// Check if tracker is this event
-		if (EventTracker.getTracker(event.player)!!.event != this) return
+		// Check if event is valid
+		if (!CDelete.isEventValid(event.player)) return
 		// Cancel event
 		event.isCancelled = true
 		// Initialize Variables
@@ -46,7 +45,7 @@ object CSetFinish : ICommand, ITrackedEvent {
 		// Check if block is a pressure plate
 		if (block.type.toString().endsWith("_PLATE", true)) {
 			// Initialize course variable
-			val course = EventTracker.getTracker(player)!!.course
+			val course = SelectManager.get(player)!!
 			// Check if plate is already a sensor
 			if (CourseManager.isSensor(block.location)) {
 				// Initialize sensor variable

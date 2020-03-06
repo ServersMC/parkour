@@ -28,9 +28,12 @@ object PlayerQuit : Listener {
 	private fun removePlayerFromListeners(event: PlayerQuitEvent) {
 		// Initialize variables
 		val player = event.player
-		// Remove player from all player tracking
-		SelectManager.remove(player)
+		// Remove player from tracking manager
+		//   This will run the onRemove() function in the
+		//   ITrackedEvent sub classes
 		EventTracker.remove(player, false)
+		// Remove player from SelectManager
+		SelectManager.remove(player)
 	}
 	
 }
