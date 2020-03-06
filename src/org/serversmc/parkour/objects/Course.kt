@@ -218,6 +218,8 @@ class Course(private val file: File) {
 		}
 	}
 	
+	fun isOpen() = (mode == Mode.OPEN)
+	
 	fun setClosed() {
 		mode = Mode.CLOSED
 		// TODO - Kick existing players
@@ -265,6 +267,7 @@ class Course(private val file: File) {
 	}
 	
 	fun updateHolograms() {
+		if (isOpen()) hideHolograms()
 		if (SelectManager.contains(this)) {
 			showHolograms()
 		}
