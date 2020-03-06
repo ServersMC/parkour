@@ -34,6 +34,11 @@ object EventTracker {
 	
 	fun getPlayers(event: ITrackedEvent) = players.filterValues { it == event }
 	
+	fun getSinglePlayer(event: ITrackedEvent): Player? {
+		players.values.singleOrNull { it == event } ?: return null
+		return players.filterValues { it == event }.keys.first()
+	}
+	
 	fun clear() {
 		players.clear()
 	}

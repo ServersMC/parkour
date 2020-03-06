@@ -17,7 +17,7 @@ object CSetFinish : ICommand, ITrackedEvent {
 	
 	override fun getStart(): String = "${GREEN}Click on a pressure plate to select new finish position"
 	override fun getCanceled(): String = "${RED}Canceled finish position set"
-	override fun getInUse(): String? = "$GRAY${EventTracker.getPlayers(this).keys.first().name} ${RED}is already setting a finish position!"
+	override fun getInUse(): String? = "$GRAY${EventTracker.getSinglePlayer(this)?.name} ${RED}is already setting a finish position!"
 	override fun onAdd(player: Player) = Unit
 	override fun onRemove(player: Player, isCancelled: Boolean) = Unit
 	

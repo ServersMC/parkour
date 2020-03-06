@@ -14,7 +14,7 @@ object CDelete : ICommand, ITrackedEvent {
 	
 	override fun getStart(): String = "${YELLOW}Are you sure you want to delete this course? Type ${GRAY}yes ${YELLOW}or ${GRAY}no"
 	override fun getCanceled(): String = "${RED}Canceled course deletion"
-	override fun getInUse(): String? = "${GRAY}${EventTracker.getPlayers(this).keys.first().name} ${RED}is already using this command!"
+	override fun getInUse(): String? = "${GRAY}${EventTracker.getSinglePlayer(this)?.name} ${RED}is already using this command!"
 	override fun onAdd(player: Player) = Unit
 	override fun onRemove(player: Player, isCancelled: Boolean) = Unit
 	

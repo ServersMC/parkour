@@ -19,21 +19,27 @@ interface ITrackedEvent {
 		}
 		// Check if player is in another tracked event
 		if (EventTracker.containsPlayer(player)) {
+			// Remove player from tracked event
+			EventTracker.remove(player, true)
 			// Check if player is using this command
 			if (EventTracker.getEvent(player)!! == this) {
+				// Stop register
+				//   This prevents a re-register of the same command
 				return
 			}
-			EventTracker.remove(player, true)
 		}
 		// Check if command is a singular use only
 		if (getInUse() != null) {
 			// Check if command is already in use
 			if (EventTracker.containsEvent(this)) {
 				player.sendMessage(getInUse()!!)
+				return
 			}
 		}
 		// Add player to EventTracker
 		EventTracker.add(player, this)
+		// Send Start message
+		player.sendMessage(getStart())
 	}
 	
 	fun isEventValid(player: Player): Boolean {
