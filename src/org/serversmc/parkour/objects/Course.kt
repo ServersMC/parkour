@@ -267,7 +267,10 @@ class Course(private val file: File) {
 	}
 	
 	fun updateHolograms() {
-		if (isOpen()) hideHolograms()
+		if (isOpen()) {
+			hideHolograms()
+			return
+		}
 		if (SelectManager.contains(this)) {
 			showHolograms()
 		}
