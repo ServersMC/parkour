@@ -46,7 +46,7 @@ object CSelect : ICommand {
 		// Select course to player
 		SelectManager.add(player, course)
 		// Prompt message
-		player.sendMessage("${GREEN}Selected course $GRAY${course.getName()}")
+		player.sendMessage("${GREEN}Editing course $GRAY${course.getName()}")
 	}
 	
 	override fun tabComplete(player: Player, args: MutableList<out String>): MutableList<String>? = ArrayList()
