@@ -49,6 +49,7 @@ class Main : JavaPlugin() {
 		// Main commands
 		CParkour.register()
 		// Parkour sub commands
+		CAddCheckpoint.register()
 		CAddRegion.register()
 		CCreate.register()
 		CDelete.register()
