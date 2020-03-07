@@ -21,7 +21,7 @@ object BlockBreak : Listener {
 				return@onBlockBreak
 			}
 			course.getRegions().forEach { region ->
-				if (region.containsBlock(event.block)) {
+				if (region.containsBlock(event.block.location)) {
 					player.sendMessage("${RED}This block is part of a course!")
 					event.isCancelled = true
 					return@onBlockBreak

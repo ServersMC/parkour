@@ -6,7 +6,7 @@ import org.serversmc.parkour.enums.*
 object Console {
 	
 	val consoleSender = Bukkit.getConsoleSender()
-	private const val p = "[AutoRestart] "
+	private const val p = "[Parkour] "
 	
 	fun info(s: String) = Bukkit.getConsoleSender().sendMessage("${ChatColor.GREEN}$p$s")
 	fun warn(s: String) = Bukkit.getConsoleSender().sendMessage("${ChatColor.YELLOW}$p$s")

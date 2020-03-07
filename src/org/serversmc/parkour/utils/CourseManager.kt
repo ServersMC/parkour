@@ -18,13 +18,10 @@ object CourseManager {
 		// Create file
 		val fileName = UUID.randomUUID()
 		val file = File(dataFolder, "$fileName.dat")
-		// Create course
 		val course = Course(file).apply {
 			setName(name)
 		}
-		// Add course to list
 		courses.add(course)
-		// Return created course
 		return course
 	}
 	
@@ -34,7 +31,6 @@ object CourseManager {
 	}
 	
 	fun courseExists(name: String): Boolean {
-		// Check if course exists
 		courses.forEach {
 			if (it.getName().equals(name, true)) return true
 		}
@@ -43,12 +39,12 @@ object CourseManager {
 	
 	fun loadCourses() {
 		dataFolder.listFiles()?.forEach {
-			// Check if file is null
 			if (it == null) return@forEach
-			// Check if file extension is .dat
 			if (it.name.endsWith(".day", true)) return@forEach
-			// Load Yaml
-			courses.add(Course(it))
+			Course(it).apply {
+				courses.add(this)
+				load()
+			}
 		} ?: dataFolder.mkdirs()
 	}
 	

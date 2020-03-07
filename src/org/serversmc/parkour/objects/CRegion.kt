@@ -63,8 +63,8 @@ class CRegion : IHologram {
 		updateHolo()
 	}
 	
-	fun containsBlock(block: Block): Boolean {
-		blocks.singleOrNull { it.getLocation() == block.location } ?: return false
+	fun containsBlock(location: Location): Boolean {
+		blocks.singleOrNull { it.getLocation() == location } ?: return false
 		return true
 	}
 	

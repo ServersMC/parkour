@@ -81,13 +81,23 @@ object PlayerMove : Listener {
 		// Check if player fell
 		if (event.to?.y ?: player.location.y <= minY) {
 			if (player.isOnGround || event.to?.y ?: player.location.y <= minY - 2) {
-				// TODO - Course reset player (turn off velocity for no fall damage)
-				TitleAPI.sendTitle(player, 5, 10, 5, "", "${BOLD}Try again!")
-				player.velocity = Vector()
-				player.teleport(course.getPlayerCheckpoint(player)?.getLocation() ?: run {
+				TitleAPI.sendTitle(player, 5, 5, 5, "", "${BOLD}Try again!")
+				player.velocity = Vector(0.0, -0.37, 0.0)
+				val checkpoint = course.getPlayerCheckpoint(player)
+				if (checkpoint == null) {
+					player.teleport(course.getSpawn())
 					course.setPlayerPos(player, -1)
-					course.getSpawn()
-				})
+				}
+				else {
+					val nextLocation = course.getRegion(checkpoint.getRegionId() + 1)?.getHoloLocation() ?: course.getFinishSensor()!!.getHoloLocation()
+					val teleportLocation = checkpoint.getHoloLocation().clone().apply {
+						direction = nextLocation.toVector()
+						pitch = 0f
+						yaw = (yaw / 15f).roundToInt() * 15f // TODO - FIX YAW ROUNDING
+					}
+					player.teleport(teleportLocation)
+					course.setPlayerPos(player, checkpoint.getRegionId())
+				}
 			}
 		}
 	}

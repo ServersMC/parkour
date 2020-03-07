@@ -31,7 +31,7 @@ class Course(private val file: File) {
 	private var name = file.nameWithoutExtension
 	private var mode = Mode.CLOSED
 	
-	init {
+	fun load() {
 		// Check if file exists
 		if (file.exists()) {
 			// Load yaml file
@@ -41,15 +41,6 @@ class Course(private val file: File) {
 			spawn.setLocation(yaml.get("spawn") as? Location)
 			mode = Mode.valueOf(yaml.getString("mode")!!)
 			author = UUID.fromString(yaml.getString("author")!!)
-			// Try to load sensors
-			val yamlSensors = yaml.getConfigurationSection("sensors")
-			yamlSensors?.getKeys(false)?.forEach {
-				// Check if section is valid
-				if (it == null) return@forEach
-				val section = yamlSensors.getConfigurationSection(it) ?: return@forEach
-				// Load sensor
-				sensors.add(CSensor().apply { load(section) })
-			}
 			// Try to load regions
 			val yamlRegions = yaml.getConfigurationSection("regions")
 			yamlRegions?.getKeys(false)?.forEach {
@@ -58,6 +49,15 @@ class Course(private val file: File) {
 				val section = yamlRegions.getConfigurationSection(it) ?: return@forEach
 				// Load region
 				regions.add(CRegion().apply { load(section) })
+			}
+			// Try to load sensors
+			val yamlSensors = yaml.getConfigurationSection("sensors")
+			yamlSensors?.getKeys(false)?.forEach {
+				// Check if section is valid
+				if (it == null) return@forEach
+				val section = yamlSensors.getConfigurationSection(it) ?: return@forEach
+				// Load sensor
+				sensors.add(CSensor().apply { load(section) })
 			}
 		}
 		else {
@@ -190,12 +190,13 @@ class Course(private val file: File) {
 	fun getSpawn() = spawn.getLocation()!!
 	
 	fun setSpawn(location: Location) {
-		val tempLocation = location.clone()
-		tempLocation.x = location.blockX + 0.5
-		tempLocation.y = location.blockY + 0.5
-		tempLocation.z = location.blockZ + 0.5
-		tempLocation.pitch = ((location.pitch / 15).roundToInt() * 15f)
-		tempLocation.yaw = (location.yaw / 15).roundToInt() * 15f
+		val tempLocation = location.clone().apply {
+			x = location.blockX + 0.5
+			y = location.blockY + 0.5
+			z = location.blockZ + 0.5
+			pitch = ((location.pitch / 15).roundToInt() * 15f)
+			yaw = (location.yaw / 15).roundToInt() * 15f
+		}
 		spawn.setLocation(tempLocation.clone())
 		updateHolograms()
 	}
