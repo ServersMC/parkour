@@ -19,10 +19,8 @@ object PlayerQuit : Listener {
 		val course = CourseManager.getCourses().singleOrNull { it.hasPlayer(player) } ?: return
 		// Remove player from game
 		course.removePlayer(player)
-		// Try to get spawn
-		val spawn = course.getSpawn()
 		// Teleport player to spawn
-		player.teleport(spawn)
+		player.teleport(course.getSpawn())
 	}
 	
 	private fun removePlayerFromListeners(event: PlayerQuitEvent) {

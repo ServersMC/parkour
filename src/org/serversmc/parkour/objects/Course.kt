@@ -220,7 +220,10 @@ class Course(private val file: File) {
 	
 	fun setClosed() {
 		mode = Mode.CLOSED
-		// TODO - Kick existing players
+		players.forEach {
+			it.key.teleport(getSpawn())
+		}
+		players.clear()
 		show()
 	}
 	

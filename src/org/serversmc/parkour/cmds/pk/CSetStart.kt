@@ -64,11 +64,11 @@ object CSetStart : ICommand, ITrackedEvent {
 						EventTracker.remove(player, true)
 						return
 					}
-					CSensor.Type.FINISH -> {
-						player.sendMessage("${YELLOW}This is no longer the finish position!")
-						course.setFinishSensor(null)
+					CSensor.Type.FINISH -> player.sendMessage("${YELLOW}This is no longer the finish position!")
+					CSensor.Type.CHECKPOINT -> {
+						player.sendMessage("${YELLOW}This block is a checkpoint!")
+						return
 					}
-					CSensor.Type.CHECKPOINT -> player.sendMessage("${YELLOW}This block is a checkpoint!")
 				}
 			}
 			// Update course start position and prompt message
