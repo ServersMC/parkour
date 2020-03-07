@@ -24,6 +24,7 @@ object PlayerMove : Listener {
 			if (event.to!!.distance(course.getStartSensor()!!.getLocation()) > 5) {
 				course.removePlayer(player)
 				TitleAPI.sendTitle(player, 0, 0, 5, "${YELLOW}Jump to next block", "${YELLOW}to begin")
+				return
 			}
 		}
 		// Find which region player is in
