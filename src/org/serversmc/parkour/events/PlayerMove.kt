@@ -13,6 +13,7 @@ import kotlin.math.*
 object PlayerMove : Listener {
 	
 	@EventHandler
+	@Suppress("warnings")
 	fun onPlayerMove(event: PlayerMoveEvent) {
 		// Try to find course
 		val course = CourseManager.getCourses().singleOrNull { it.hasPlayer(event.player) } ?: return
@@ -36,11 +37,13 @@ object PlayerMove : Listener {
 			}
 		}
 		// Flow Control
-		regionPositionUpdate(player, course, region)
-		outOfBoundsCheck(player, course)
+		regionPositionUpdate(event, course, region)
+		outOfBoundsCheck(event, course)
 	}
 	
-	private fun regionPositionUpdate(player: Player, course: Course, region: CRegion?) {
+	private fun regionPositionUpdate(event: PlayerMoveEvent, course: Course, region: CRegion?) {
+		// Initialize variables
+		val player = event.player
 		// Cancel is region is null
 		if (region == null) return
 		// Start course for player if is in queue
@@ -55,7 +58,9 @@ object PlayerMove : Listener {
 		}
 	}
 	
-	private fun outOfBoundsCheck(player: Player, course: Course) {
+	private fun outOfBoundsCheck(event: PlayerMoveEvent, course: Course) {
+		// Initialize variables
+		val player = event.player
 		// Initialize variables
 		val pos = course.getPlayerPos(player)
 		var minY = 255.0
@@ -74,10 +79,10 @@ object PlayerMove : Listener {
 		}
 		
 		// Check if player fell
-		if (player.location.y <= minY) {
-			if (player.isOnGround || player.location.y <= minY - 2) {
+		if (event.to?.y ?: player.location.y <= minY) {
+			if (player.isOnGround || event.to?.y ?: player.location.y <= minY - 2) {
 				// TODO - Course reset player (turn off velocity for no fall damage)
-				TitleAPI.sendTitle(player, 10, 20, 10, "", "${BOLD}Try again!")
+				TitleAPI.sendTitle(player, 5, 10, 5, "", "${BOLD}Try again!")
 				player.velocity = Vector()
 				player.teleport(course.getPlayerCheckpoint(player)?.getLocation() ?: run {
 					course.setPlayerPos(player, -1)
